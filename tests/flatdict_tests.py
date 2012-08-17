@@ -65,6 +65,10 @@ class FlatDictTests(unittest.TestCase):
         for key in keys + ['foo:bar', 'foo']:
             self.assertTrue('key' not in self.object)
 
+    def test_as_dict(self):
+        flat_dict_value = flatdict.FlatDict(self.VALUES)
+        self.assertDictEqual(flat_dict_value.as_dict(), self.VALUES)
+
     def test_clear(self):
         self.object.clear()
         self.assertDictEqual(self.object, dict())

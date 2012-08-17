@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='flatdict',
-      version='1.0.0',
+      version='1.1.0',
       description=("Python module for interacting with nested dicts as a "
                    "single level dict with delimited keys."),
       author="Gavin M. Roy",

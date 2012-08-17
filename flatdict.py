@@ -3,7 +3,9 @@ FlatDict Implementation
 
 """
 __author__ = 'Gavin M. Roy <gmr@meetme.com>'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
+
+import json
 
 
 class FlatDict(dict):
@@ -104,6 +106,15 @@ class FlatDict(dict):
 
     def _key(self, parent, child):
         return self.DELIMITER.join([parent, child])
+
+    def as_dict(self):
+        dict_out = dict()
+        for key in self._values.keys():
+            if isinstance(self._values[key], FlatDict):
+                dict_out[key] = self._values[key].as_dict()
+            else:
+                dict_out[key] = self._values[key]
+        return dict_out
 
     def clear(self):
         self._values.clear()

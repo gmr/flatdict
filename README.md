@@ -25,7 +25,9 @@ and
 
 API
 ---
-FlatDict has the same methods as dict in Python 2.6.
+FlatDict has the same methods as dict in Python 2.6. In addition, it has a
+FlatDict.as_dict method which will return a pure nested dictionary from a
+FlatDict value.
 
 Installation
 ------------
@@ -57,3 +59,5 @@ Example Use
 
     for values in flat.itervalues():
         print key
+
+    print repr(flat.as_dict())
