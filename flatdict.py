@@ -60,15 +60,10 @@ class FlatDict(dict):
         if self.DELIMITER not in key:
             return self._values[key]
         parent, child = key.split(self.DELIMITER, 1)
-        if parent in self._values:
-            if child in self._values[parent]:
-                child_value = self._values[parent][child]
-                if isinstance(child_value, FlatDict):
-                    value = dict()
-                    for child_key in child_value.keys():
-                        value[self._key(parent,child_key)] = child_value
-                    return child_value
-                return child_value
+        if parent in self._values and child in self._values[parent]:
+            return self._values[parent][child]
+        else:
+            raise KeyError(key)
 
     def __iter__(self):
         for key in self.keys():
