@@ -91,6 +91,11 @@ class FlatDictTests(unittest.TestCase):
         expectation = 4
         self.assertEqual(self.object[key], expectation)
 
+    def test_getitem_flat_keyerror(self):
+        getfunc = lambda k: self.object[k]
+        self.assertRaises(KeyError, getfunc, 'foo:badkey')
+        self.assertRaises(KeyError, getfunc, 'foo:grault:badkey')
+
     def test_get_flat(self):
         key = 'foo:grault:qux'
         expectation = 4
