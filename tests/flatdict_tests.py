@@ -38,7 +38,7 @@ class FlatDictTests(unittest.TestCase):
         self.assertTrue(self.KEYS[0] in self.object)
 
     def test_contains_false(self):
-        self.assertTrue(self.KEYS[0] in self.object)
+        self.assertFalse('foo:badkey' in self.object)
 
     def test_contains_nested_true(self):
         self.assertTrue('bar' in self.object['foo'])
