@@ -41,6 +41,8 @@ API
 ``FlatDict.as_dict`` method which will return a pure nested dictionary from a
 ``FlatDict`` value.
 
+Documentation is available at http://flatdict.readthedocs.org
+
 Installation
 ------------
 
