@@ -8,7 +8,9 @@ FlatDict
 |PyPI version| |Downloads| |Build Status|
 
 **FlatDict** is a Python module for interacting with nested dicts as a single
-level dict with delimited keys. FlatDict supports Python 2.6, 2.7, 3.2, and 3.3.
+level dict with delimited keys. :py:class:`~flatdict.FlatDict` supports Python 2.6, 2.7, 3.2, and 3.3.
+
+Jump to :ref:`installation`, :ref:`example`, :ref:`docs`, or :ref:`license`.
 
 For example:
 
@@ -37,6 +39,8 @@ and
     foo['foo:bar']
 
 
+.. _installation:
+
 Installation
 ------------
 
@@ -44,13 +48,7 @@ Installation
 
     $ pip install flatdict
 
-Class Documentation
--------------------
-
-.. automodule:: flatdict
-    :members:
-    :undoc-members:
-    :inherited-members:
+.. _example:
 
 Example Use
 -----------
@@ -82,6 +80,18 @@ Example Use
         print key
 
     print repr(flat.as_dict())
+
+.. _docs:
+
+Class Documentation
+-------------------
+
+.. automodule:: flatdict
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+.. _license:
 
 License
 =======
