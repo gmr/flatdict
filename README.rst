@@ -1,5 +1,6 @@
-FlatDict
---------
+==========
+ FlatDict
+==========
 
 |PyPI version| |Downloads| |Build Status|
 
@@ -33,19 +34,22 @@ and
 
     foo['foo:bar']
 
-**API**
+API
+---
 
 ``FlatDict`` has the same methods as dict in Python 2.6. In addition, it has a
 ``FlatDict.as_dict`` method which will return a pure nested dictionary from a
 ``FlatDict`` value.
 
-**Installation**
+Installation
+------------
 
 .. code-block:: bash
 
     $ pip install flatdict
 
-**Example Use**
+Example Use
+-----------
 
 .. code-block:: python
 
