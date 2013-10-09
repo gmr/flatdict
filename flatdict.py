@@ -10,7 +10,7 @@ class FlatDict(dict):
     """FlatDict is a dict object that allows for single level, delimited
     key/value pair mapping of nested dictionaries. The default delimiter value
     is : but can be changed in the constructor or by calling
-    FlatDict.set_delimiter.
+    ``FlatDict.set_delimiter``.
 
     """
 
@@ -118,9 +118,9 @@ class FlatDict(dict):
         return values
 
     def get(self, key, d=None):
-        """Return the value for key if key is in the dictionary, else default.
-        If default is not given, it defaults to None, so that this method
-        never raises a KeyError.
+        """Return the value for key if key is in the flat dictionary, else
+        default. If default is not given, it defaults to None, so that this
+        method never raises a KeyError.
 
         :param mixed key: The key to get
         :param mixed: The default value
@@ -146,8 +146,8 @@ class FlatDict(dict):
 
         ..note:: CPython implementation detail: Keys and values are listed in
         an arbitrary order which is non-random, varies across Python
-        implementations, and depends on the dictionary's history of insertions
-        and deletions.
+        implementations, and depends on the flat dictionary's history of
+        insertions and deletions.
 
         :rtype: list
 
@@ -158,8 +158,8 @@ class FlatDict(dict):
         return items
 
     def iteritems(self):
-        """Return an iterator over the dictionary's (key, value) pairs. See the
-        note for dict.items().
+        """Return an iterator over the flat dictionary's (key, value) pairs.
+        See the note for ``FlatDict.items()``.
 
         Using ``iteritems()`` while adding or deleting entries in the flat
         dictionary may raise a ``RuntimeError`` or fail to iterate over all
@@ -174,7 +174,7 @@ class FlatDict(dict):
 
     def iterkeys(self):
         """Return an iterator over the flat dictionary's keys. See the note for
-        `dict.items()`.
+        ``FlatDict.items()``.
 
         Using ``iterkeys()`` while adding or deleting entries in the flat
         dictionary may raise a ``RuntimeError`` or fail to iterate over all
@@ -190,7 +190,7 @@ class FlatDict(dict):
 
     def itervalues(self):
         """Return an iterator over the flat dictionary's values. See the note
-        for `dict.items()`.
+        for ``FlatDict.items()``.
 
         Using ``itervalues()`` while adding or deleting entries in the flat
         dictionary may raise a ``RuntimeError`` or fail to iterate over all
@@ -239,8 +239,9 @@ class FlatDict(dict):
         return value
 
     def setdefault(self, key, default):
-        """ If key is in the dictionary, return its value. If not, insert key
-        with a value of default and return default. default defaults to None.
+        """ If key is in the flat dictionary, return its value. If not,
+        insert key with a value of default and return default.
+        default defaults to None.
 
         :param mixed key: The key name
         :param mixed default: The default value
@@ -264,13 +265,13 @@ class FlatDict(dict):
                 self._values[key].set_delimiter(delimiter)
 
     def update(self, other=None, **kwargs):
-        """Update the dictionary with the key/value pairs from other,
+        """Update the flat dictionary with the key/value pairs from other,
         overwriting existing keys.
 
-        ``update()`` accepts either another dictionary object or an iterable of
-        key/value pairs (as tuples or other iterables of length two). If
-        keyword arguments are specified, the dictionary is then updated with
-        those key/value pairs: ``d.update(red=1, blue=2)``.
+        ``update()`` accepts either another flat dictionary object or an
+        iterable of key/value pairs (as tuples or other iterables of length
+        two). If keyword arguments are specified, the flat dictionary is then
+        updated with those key/value pairs: ``d.update(red=1, blue=2)``.
 
         :rtype: None
 
