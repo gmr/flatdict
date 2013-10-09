@@ -1,6 +1,8 @@
 FlatDict
 ========
 
+.. image:: https://travis-ci.org/gmr/flatdict.png?branch=master   :target: https://travis-ci.org/gmr/flatdict
+
 FlatDict is a dict object that allows for single level, delimited key/value pair
 mapping of nested dictionaries. You can interact with FlatDict like a normal
 dictionary and access child dicts as you normally would or with the composited
@@ -8,33 +10,46 @@ key.
 
 For example:
 
+.. code-block:: python
+
     foo = {'foo': {'bar': 'baz', 'qux': 'corge'}}
 
 is represented as:
+
+.. code-block:: python
 
     {'foo:bar': 'baz',
      'foo:qux': 'corge'}
 
 And can still be accessed as:
 
+.. code-block:: python
+
     foo['foo']['bar']
 
 and
+
+.. code-block:: python
 
     foo['foo:bar']
 
 API
 ---
-FlatDict has the same methods as dict in Python 2.6. In addition, it has a
-FlatDict.as_dict method which will return a pure nested dictionary from a
-FlatDict value.
+`FlatDict` has the same methods as dict in Python 2.6. In addition, it has a
+`FlatDict.as_dict` method which will return a pure nested dictionary from a
+`FlatDict` value.
 
 Installation
 ------------
-easy_install flatdict
+
+.. code-block:: python
+
+    pip install flatdict
 
 Example Use
 -----------
+
+.. code-block:: python
 
     import flatdict
 
