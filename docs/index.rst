@@ -12,27 +12,26 @@ level dict with delimited keys. :py:class:`~flatdict.FlatDict` supports Python 2
 
 Jump to :ref:`installation`, :ref:`example`, :ref:`docs`, or :ref:`license`.
 
-For example:
+*For example:*
 
 .. code-block:: python
 
     foo = {'foo': {'bar': 'baz', 'qux': 'corge'}}
 
-is represented as:
+*is represented as:*
 
 .. code-block:: python
 
     {'foo:bar': 'baz',
      'foo:qux': 'corge'}
 
-And can still be accessed as:
+*And can still be accessed as:*
 
 .. code-block:: python
 
     foo['foo']['bar']
 
-
-and
+*and*
 
 .. code-block:: python
 

@@ -9,26 +9,26 @@ mapping of nested dictionaries. You can interact with FlatDict like a normal
 dictionary and access child dicts as you normally would or with the composited
 key.
 
-For example:
+*For example:*
 
 .. code-block:: python
 
     foo = {'foo': {'bar': 'baz', 'qux': 'corge'}}
 
-is represented as:
+*is represented as:*
 
 .. code-block:: python
 
     {'foo:bar': 'baz',
      'foo:qux': 'corge'}
 
-And can still be accessed as:
+*And can still be accessed as:*
 
 .. code-block:: python
 
     foo['foo']['bar']
 
-and
+*and*
 
 .. code-block:: python
 
