@@ -38,7 +38,7 @@ class FlatDictTests(unittest.TestCase):
         self.assertTrue(self.KEYS[0] in self.object)
 
     def test_contains_false(self):
-        self.assertTrue(self.KEYS[0] in self.object)
+        self.assertFalse('foo:badkey' in self.object)
 
     def test_contains_nested_true(self):
         self.assertTrue('bar' in self.object['foo'])
@@ -90,6 +90,11 @@ class FlatDictTests(unittest.TestCase):
         key = 'foo:grault:qux'
         expectation = 4
         self.assertEqual(self.object[key], expectation)
+
+    def test_getitem_flat_keyerror(self):
+        getfunc = lambda k: self.object[k]
+        self.assertRaises(KeyError, getfunc, 'foo:badkey')
+        self.assertRaises(KeyError, getfunc, 'foo:grault:badkey')
 
     def test_get_flat(self):
         key = 'foo:grault:qux'

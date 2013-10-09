@@ -13,7 +13,7 @@ For example:
 is represented as:
 
     {'foo:bar': 'baz',
-     'foo'qux': 'corge'}
+     'foo:qux': 'corge'}
 
 And can still be accessed as:
 
