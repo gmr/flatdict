@@ -1,9 +1,10 @@
+========
 FlatDict
 ========
 
-.. image:: https://travis-ci.org/gmr/flatdict.png?branch=master   :target: https://travis-ci.org/gmr/flatdict
+|PyPI version| |Downloads| |Build Status|
 
-FlatDict is a dict object that allows for single level, delimited key/value pair
+``FlatDict`` is a dict object that allows for single level, delimited key/value pair
 mapping of nested dictionaries. You can interact with FlatDict like a normal
 dictionary and access child dicts as you normally would or with the composited
 key.
@@ -35,9 +36,9 @@ and
 
 API
 ---
-`FlatDict` has the same methods as dict in Python 2.6. In addition, it has a
-`FlatDict.as_dict` method which will return a pure nested dictionary from a
-`FlatDict` value.
+``FlatDict`` has the same methods as dict in Python 2.6. In addition, it has a
+``FlatDict.as_dict`` method which will return a pure nested dictionary from a
+``FlatDict`` value.
 
 Installation
 ------------
@@ -76,3 +77,10 @@ Example Use
         print key
 
     print repr(flat.as_dict())
+
+.. |PyPI version| image:: https://badge.fury.io/py/flatdict.png
+   :target: http://badge.fury.io/py/flatdict
+.. |Downloads| image:: https://pypip.in/d/flatdict/badge.png
+   :target: https://crate.io/packages/flatdict
+.. |Build Status| image:: https://travis-ci.org/gmr/flatdict.png?branch=master
+   :target: https://travis-ci.org/gmr/flatdict
