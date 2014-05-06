@@ -2,7 +2,7 @@
  FlatDict
 ==========
 
-|PyPI version| |Downloads| |Build Status|
+|Version| |Downloads| |Status| |Coverage| |License|
 
 ``FlatDict`` is a dict object that allows for single level, delimited key/value pair
 mapping of nested dictionaries. You can interact with FlatDict like a normal
@@ -81,9 +81,17 @@ Example Use
 
     print repr(flat.as_dict())
 
-.. |PyPI version| image:: https://badge.fury.io/py/flatdict.png
+.. |Version| image:: https://badge.fury.io/py/flatdict.svg?
    :target: http://badge.fury.io/py/flatdict
-.. |Downloads| image:: https://pypip.in/d/flatdict/badge.png
-   :target: https://crate.io/packages/flatdict
-.. |Build Status| image:: https://travis-ci.org/gmr/flatdict.png?branch=master
+
+.. |Status| image:: https://travis-ci.org/gmr/flatdict.svg?branch=master
    :target: https://travis-ci.org/gmr/flatdict
+
+.. |Coverage| image:: https://coveralls.io/repos/gmr/flatdict/badge.png
+   :target: https://coveralls.io/r/gmr/flatdict
+  
+.. |Downloads| image:: https://pypip.in/d/flatdict/badge.svg?
+   :target: https://pypi.python.org/pypi/flatdict
+   
+.. |License| image:: https://pypip.in/license/flatdict/badge.svg?
+   :target: https://flatdict.readthedocs.org
