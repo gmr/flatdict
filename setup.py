@@ -1,4 +1,4 @@
-from distutils.core import setup
+import setuptools
 import sys
 
 from flatdict import __version__
