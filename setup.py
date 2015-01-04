@@ -1,4 +1,4 @@
-import setuptools
+from setuptools import setup
 import sys
 
 from flatdict import __version__
