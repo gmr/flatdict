@@ -2,11 +2,12 @@
 Unittests for flatdict.FlatDict
 
 """
-import flatdict
 try:
     import unittest2 as unittest
 except ImportError:
     import unittest
+
+import flatdict
 
 
 class FlatDictTests(unittest.TestCase):
