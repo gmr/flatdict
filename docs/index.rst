@@ -95,11 +95,11 @@ Class Documentation
 .. |Status| image:: https://travis-ci.org/gmr/flatdict.svg?branch=master
    :target: https://travis-ci.org/gmr/flatdict
 
-.. |Coverage| image:: https://coveralls.io/repos/gmr/flatdict/badge.png
-   :target: https://coveralls.io/r/gmr/flatdict
-  
+.. |Coverage| image:: https://codecov.io/github/gmr/flatdict/coverage.svg?branch=master
+   :target: https://codecov.io/github/gmr/flatdict?branch=master
+
 .. |Downloads| image:: https://pypip.in/d/flatdict/badge.svg?
    :target: https://pypi.python.org/pypi/flatdict
-   
+
 .. |License| image:: https://pypip.in/license/flatdict/badge.svg?
    :target: https://flatdict.readthedocs.org
