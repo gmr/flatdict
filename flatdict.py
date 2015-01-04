@@ -3,7 +3,7 @@ key/value pair mapping of nested dictionaries.
 
 """
 __author__ = 'Gavin M. Roy <gavinmroy@gmail.com>'
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
 
 class FlatDict(dict):
@@ -20,10 +20,10 @@ class FlatDict(dict):
 
     def __init__(self, value=None, delimiter=None):
         super(FlatDict, self).__init__()
-        self._values = dict()
+        self._values = {}
         self._delimiter = delimiter or self.DELIMITER
         if isinstance(value, dict):
-            for key in value:
+            for key in value.keys():
                 self.__setitem__(key, value[key])
 
     def __contains__(self, key):
@@ -60,7 +60,7 @@ class FlatDict(dict):
         return len(self.keys())
 
     def __repr__(self):
-        values = dict()
+        values = {}
         for key in self.keys():
             values[key] = self.__getitem__(key)
         return values.__repr__()
@@ -74,14 +74,15 @@ class FlatDict(dict):
                 self._values[parent_key] = FlatDict(delimiter=self._delimiter)
             parent = self._values.get(parent_key)
             if not isinstance(parent, FlatDict):
-                raise TypeError('Top level node is not a FlatDict: %s',
-                                parent_key, type(self._values[parent_key]))
+                raise TypeError(
+                    'Top level node is not a FlatDict: {0}'.format(
+                        parent_key, type(self._values[parent_key])))
             self._values[parent_key][child_key] = value
         else:
             self._values[key] = value
 
     def __str__(self):
-        values = dict()
+        values = {}
         for key in self.keys():
             values[key] = self.__getitem__(key)
         return values.__str__()
@@ -95,7 +96,7 @@ class FlatDict(dict):
         :rtype: dict
 
         """
-        dict_out = dict()
+        dict_out = {}
         for key in self._values.keys():
             if isinstance(self._values[key], FlatDict):
                 dict_out[key] = self._values[key].as_dict()
@@ -113,7 +114,7 @@ class FlatDict(dict):
         :rtype: flatdict.FlatDict
 
         """
-        values = dict()
+        values = {}
         for key in self.keys():
             values[key] = self.__getitem__(key)
         return values
@@ -249,7 +250,6 @@ class FlatDict(dict):
         :rtype: mixed
 
         """
-        print('setdefault: %s' % key)
         if key not in self:
             self.__setitem__(key, default)
         return self.__getitem__(key)
