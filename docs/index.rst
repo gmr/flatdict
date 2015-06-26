@@ -36,6 +36,19 @@ Jump to :ref:`installation`, :ref:`example`, :ref:`docs`, or :ref:`license`.
 
     foo['foo:bar']
 
+Additionally, lists and tuples are also converted into dicts using enumerate().
+
+*For example:*
+
+.. code-block:: python
+
+    d = {'list': ['a', 'b', 'c',]}
+
+*Will be flattened as follows:*
+
+.. code-block:: python
+
+    flat = {'list:0': 'a', 'list:1': 'b', 'list:2': 'c'}
 
 .. _installation:
 
