@@ -81,17 +81,17 @@ Example Use
 
     print repr(flat.as_dict())
 
-.. |Version| image:: https://badge.fury.io/py/flatdict.svg?
+.. |Version| image:: https://img.shields.io/pypi/v/flatdict.svg?
    :target: http://badge.fury.io/py/flatdict
 
-.. |Status| image:: https://travis-ci.org/gmr/flatdict.svg?branch=master
+.. |Status| image:: https://img.shields.io/travis/gmr/flatdict.svg?
    :target: https://travis-ci.org/gmr/flatdict
 
-.. |Coverage| image:: https://codecov.io/github/gmr/flatdict/coverage.svg?branch=master
+.. |Coverage| image:: https://img.shields.io/codecov/c/github/gmr/flatdict.svg?
    :target: https://codecov.io/github/gmr/flatdict?branch=master
 
-.. |Downloads| image:: https://pypip.in/d/flatdict/badge.svg?
+.. |Downloads| image:: https://img.shields.io/pypi/dm/flatdict.svg?
    :target: https://pypi.python.org/pypi/flatdict
 
-.. |License| image:: https://pypip.in/license/flatdict/badge.svg?
+.. |License| image:: https://img.shields.io/pypi/l/flatdict.svg?
    :target: https://flatdict.readthedocs.org
