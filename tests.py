@@ -18,6 +18,12 @@ class FlatDictTests(unittest.TestCase):
             'foo:grault:baz',
             'foo:grault:qux',
             'foo:grault:corge',
+            'foo:list:0',
+            'foo:list:1',
+            'foo:list:2',
+            'foo:tuple:0',
+            'foo:tuple:1',
+            'foo:tuple:2',
             'garply:foo',
             'garply:bar',
             'garply:baz',
@@ -28,7 +34,9 @@ class FlatDictTests(unittest.TestCase):
                               'corge': 2},
                       'grault': {'baz': 3,
                                  'qux': 4,
-                                 'corge': 5}},
+                                 'corge': 5},
+                      'list': ['F', 'O', 'O',],
+                      'tuple': ('F', 0, 0,)},
               'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}}}
 
     def setUp(self):
@@ -75,6 +83,12 @@ class FlatDictTests(unittest.TestCase):
                        'foo:grault:baz': 3,
                        'foo:grault:qux': 4,
                        'foo:grault:corge': 5,
+                       'foo:list:0': 'F',
+                       'foo:list:1': 'O',
+                       'foo:list:2': 'O',
+                       'foo:tuple:0': 'F',
+                       'foo:tuple:1': 0,
+                       'foo:tuple:2': 0,
                        'garply:foo': 0,
                        'garply:bar': 1,
                        'garply:baz': 2,
@@ -125,6 +139,12 @@ class FlatDictTests(unittest.TestCase):
                        ('foo:grault:baz', 3),
                        ('foo:grault:qux', 4),
                        ('foo:grault:corge', 5),
+                       ('foo:list:0', 'F'),
+                       ('foo:list:1', 'O'),
+                       ('foo:list:2', 'O'),
+                       ('foo:tuple:0', 'F'),
+                       ('foo:tuple:1', 0),
+                       ('foo:tuple:2', 0),
                        ('garply:foo', 0),
                        ('garply:bar', 1),
                        ('garply:baz', 2),
@@ -133,15 +153,21 @@ class FlatDictTests(unittest.TestCase):
 
     def test_iteritems(self):
         expectation = [('foo:bar:baz', 0),
-            ('foo:bar:qux', 1),
-            ('foo:bar:corge', 2),
-            ('foo:grault:baz', 3),
-            ('foo:grault:qux', 4),
-            ('foo:grault:corge', 5),
-            ('garply:foo', 0),
-            ('garply:bar', 1),
-            ('garply:baz', 2),
-            ('garply:qux:corge', 3)]
+                       ('foo:bar:qux', 1),
+                       ('foo:bar:corge', 2),
+                       ('foo:grault:baz', 3),
+                       ('foo:grault:qux', 4),
+                       ('foo:grault:corge', 5),
+                       ('foo:list:0', 'F'),
+                       ('foo:list:1', 'O'),
+                       ('foo:list:2', 'O'),
+                       ('foo:tuple:0', 'F'),
+                       ('foo:tuple:1', 0),
+                       ('foo:tuple:2', 0),
+                       ('garply:foo', 0),
+                       ('garply:bar', 1),
+                       ('garply:baz', 2),
+                       ('garply:qux:corge', 3)]
         for value in self.object.iteritems():
             self.assertTrue(value in expectation)
 
@@ -154,7 +180,7 @@ class FlatDictTests(unittest.TestCase):
             self.assertTrue(key in self.keys)
 
     def test_itervalues(self):
-        values = [0, 1, 2, 3, 4, 5]
+        values = (0, 1, 2, 3, 4, 5, 'F', 'O')
         for value in self.object.itervalues():
             self.assertTrue(value in values,
                             '%s is not in %r' % (value, values))
@@ -179,7 +205,7 @@ class FlatDictTests(unittest.TestCase):
         self.assertEqual(self.object[key], value)
 
     def test_setitem_raises_type_error(self):
-        self.object['test'] = [1, 2, 3]
+        self.object['test'] = 123
         self.assertRaises(TypeError, self.object.setdefault, 'test:foo', 4)
 
     def test_pop_flat(self):
@@ -199,7 +225,13 @@ class FlatDictTests(unittest.TestCase):
                                          'bar:corge': 2,
                                          'grault:baz': 3,
                                          'grault:qux': 4,
-                                         'grault:corge': 5})
+                                         'grault:corge': 5,
+                                         'foo:list:0': 'F',
+                                         'foo:list:1': 'O',
+                                         'foo:list:2': 'O',
+                                         'foo:tuple:0': 'F',
+                                         'foo:tuple:1': 0,
+                                         'foo:tuple:2': 0})
         response = self.object.pop(key)
         self.assertDictEqual(response, expectation)
         self.assertTrue(key not in self.object)
@@ -214,7 +246,13 @@ class FlatDictTests(unittest.TestCase):
                                          'garply:foo': 0,
                                          'garply:bar': 1,
                                          'garply:baz': 2,
-                                         'garply:qux:corge': 3})
+                                         'garply:qux:corge': 3,
+                                         'foo:list:0': 'F',
+                                         'foo:list:1': 'O',
+                                         'foo:list:2': 'O',
+                                         'foo:tuple:0': 'F',
+                                         'foo:tuple:1': 0,
+                                         'foo:tuple:2': 0})
         self.object.update({'foo:bar:baz': 4,
                             'foo:bar:qux': 5,
                             'foo:bar:corge': 6})
@@ -263,7 +301,13 @@ class FlatDictDelimiterTests(FlatDictTests):
                        'garply-foo': 0,
                        'garply-bar': 1,
                        'garply-baz': 2,
-                       'garply-qux-corge': 3}
+                       'garply-qux-corge': 3,
+                       'foo-list-0': 'F',
+                       'foo-list-1': 'O',
+                       'foo-list-2': 'O',
+                       'foo-tuple-0': 'F',
+                       'foo-tuple-1': 0,
+                       'foo-tuple-2': 0}
         self.assertDictEqual(self.object.copy(), expectation)
 
     def test_getitem_flat(self):
@@ -310,20 +354,32 @@ class FlatDictDelimiterTests(FlatDictTests):
                        ('garply-foo', 0),
                        ('garply-bar', 1),
                        ('garply-baz', 2),
-                       ('garply-qux-corge', 3)]
+                       ('garply-qux-corge', 3),
+                       ('foo-list-0', 'F'),
+                       ('foo-list-1', 'O'),
+                       ('foo-list-2', 'O'),
+                       ('foo-tuple-0', 'F'),
+                       ('foo-tuple-1', 0),
+                       ('foo-tuple-2', 0)]
         self.assertEqual(sorted(self.object.items()), sorted(expectation))
 
     def test_iteritems(self):
         expectation = [('foo-bar-baz', 0),
-            ('foo-bar-qux', 1),
-            ('foo-bar-corge', 2),
-            ('foo-grault-baz', 3),
-            ('foo-grault-qux', 4),
-            ('foo-grault-corge', 5),
-            ('garply-foo', 0),
-            ('garply-bar', 1),
-            ('garply-baz', 2),
-            ('garply-qux-corge', 3)]
+                       ('foo-bar-qux', 1),
+                       ('foo-bar-corge', 2),
+                       ('foo-grault-baz', 3),
+                       ('foo-grault-qux', 4),
+                       ('foo-grault-corge', 5),
+                       ('garply-foo', 0),
+                       ('garply-bar', 1),
+                       ('garply-baz', 2),
+                       ('garply-qux-corge', 3),
+                       ('foo-list-0', 'F'),
+                       ('foo-list-1', 'O'),
+                       ('foo-list-2', 'O'),
+                       ('foo-tuple-0', 'F'),
+                       ('foo-tuple-1', 0),
+                       ('foo-tuple-2', 0)]
         for value in self.object.iteritems():
             self.assertTrue(value in expectation)
 
@@ -334,7 +390,7 @@ class FlatDictDelimiterTests(FlatDictTests):
         self.assertEqual(self.object[key], value)
 
     def test_setitem_raises_type_error(self):
-        self.object['test'] = [1, 2, 3]
+        self.object['test'] = 123
         self.assertRaises(TypeError, self.object.setdefault, 'test-foo', 4)
 
     def test_pop_flat(self):
@@ -351,7 +407,13 @@ class FlatDictDelimiterTests(FlatDictTests):
                                          'bar-corge': 2,
                                          'grault-baz': 3,
                                          'grault-qux': 4,
-                                         'grault-corge': 5})
+                                         'grault-corge': 5,
+                                         'foo:list:0': 'F',
+                                         'foo:list:1': 'O',
+                                         'foo:list:2': 'O',
+                                         'foo:tuple:0': 'F',
+                                         'foo:tuple:1': 0,
+                                         'foo:tuple:2': 0})
         response = self.object.pop(key)
         self.assertDictEqual(response, expectation)
         self.assertTrue(key not in self.object)
@@ -366,7 +428,13 @@ class FlatDictDelimiterTests(FlatDictTests):
                                          'garply-foo': 0,
                                          'garply-bar': 1,
                                          'garply-baz': 2,
-                                         'garply-qux-corge': 3})
+                                         'garply-qux-corge': 3,
+                                         'foo:list:0': 'F',
+                                         'foo:list:1': 'O',
+                                         'foo:list:2': 'O',
+                                         'foo:tuple:0': 'F',
+                                         'foo:tuple:1': 0,
+                                         'foo:tuple:2': 0})
         self.object.update({'foo-bar-baz': 4,
                             'foo-bar-qux': 5,
                             'foo-bar-corge': 6})

@@ -18,10 +18,11 @@ class FlatDict(dict):
     # The default delimiter value
     DELIMITER = ':'
 
-    def __init__(self, value=None, delimiter=None):
+    def __init__(self, value=None, delimiter=None, former_type=dict):
         super(FlatDict, self).__init__()
         self._values = {}
         self._delimiter = delimiter or self.DELIMITER
+        self.former_type = former_type
         if isinstance(value, dict):
             for key in value.keys():
                 self.__setitem__(key, value[key])
@@ -66,8 +67,11 @@ class FlatDict(dict):
         return values.__repr__()
 
     def __setitem__(self, key, value):
+        former_type = type(value)
+        if isinstance(value, (list, tuple)):
+            value = dict((str(i), v) for (i, v) in enumerate(value))
         if isinstance(value, dict) and not isinstance(value, FlatDict):
-            value = FlatDict(value, self._delimiter)
+            value = FlatDict(value, self._delimiter, former_type=former_type)
         if self._delimiter in key:
             parent_key, child_key = key.split(self._delimiter, 1)
             if parent_key not in self._values:
@@ -98,10 +102,18 @@ class FlatDict(dict):
         """
         dict_out = {}
         for key in self._values.keys():
-            if isinstance(self._values[key], FlatDict):
-                dict_out[key] = self._values[key].as_dict()
+            value = self._values[key]
+            if isinstance(value, FlatDict):
+                if value.former_type == list:
+                    dict_out[key] = [v for k, v in sorted(value.items())]
+                    pass
+                elif value.former_type == tuple:
+                    dict_out[key] = tuple(v for k, v in sorted(value.items()))
+                    pass
+                elif value.former_type == dict:
+                    dict_out[key] = value.as_dict()
             else:
-                dict_out[key] = self._values[key]
+                dict_out[key] = value
         return dict_out
 
     def clear(self):
