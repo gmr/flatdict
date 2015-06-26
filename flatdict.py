@@ -2,8 +2,7 @@
 key/value pair mapping of nested dictionaries.
 
 """
-__author__ = 'Gavin M. Roy <gavinmroy@gmail.com>'
-__version__ = '1.1.3'
+__version__ = '1.2.0'
 
 
 class FlatDict(dict):
