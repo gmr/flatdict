@@ -16,12 +16,15 @@ class FlatDict(dict):
 
     # The default delimiter value
     DELIMITER = ':'
+    # Should as_dict method be aware of lists while building response
+    AS_DICT_LIST_AWARENESS = False
 
-    def __init__(self, value=None, delimiter=None, former_type=dict):
+    def __init__(self, value=None, delimiter=None, former_type=dict, as_dict_list_awareness=None):
         super(FlatDict, self).__init__()
         self._values = {}
         self._delimiter = delimiter or self.DELIMITER
         self.former_type = former_type
+        self.as_dict_list_awareness = as_dict_list_awareness or self.AS_DICT_LIST_AWARENESS
         if isinstance(value, dict):
             for key in value.keys():
                 self.__setitem__(key, value[key])
@@ -70,11 +73,13 @@ class FlatDict(dict):
         if isinstance(value, (list, tuple)):
             value = dict((str(i), v) for (i, v) in enumerate(value))
         if isinstance(value, dict) and not isinstance(value, FlatDict):
-            value = FlatDict(value, self._delimiter, former_type=former_type)
+            value = FlatDict(value, self._delimiter, former_type=former_type,
+                             as_dict_list_awareness=self.as_dict_list_awareness)
         if self._delimiter in key:
             parent_key, child_key = key.split(self._delimiter, 1)
             if parent_key not in self._values:
-                self._values[parent_key] = FlatDict(delimiter=self._delimiter)
+                self._values[parent_key] = FlatDict(delimiter=self._delimiter,
+                                                    as_dict_list_awareness=self.as_dict_list_awareness)
             parent = self._values.get(parent_key)
             if not isinstance(parent, FlatDict):
                 raise TypeError(
@@ -104,7 +109,8 @@ class FlatDict(dict):
             value = self._values[key]
             if isinstance(value, FlatDict):
                 if value.former_type == list:
-                    dict_out[key] = [v for k, v in sorted(value.items())]
+                    dict_out[key] = [v for k, v in sorted(value.items())] \
+                        if not self.as_dict_list_awareness else value._as_list()
                     pass
                 elif value.former_type == tuple:
                     dict_out[key] = tuple(v for k, v in sorted(value.items()))
@@ -114,6 +120,37 @@ class FlatDict(dict):
             else:
                 dict_out[key] = value
         return dict_out
+
+    def _as_list(self):
+        """Return the flat dictionary instance as a list (if possible).
+
+        :rtype: list
+        """
+        if not self.former_type == list:
+            raise TypeError("Can only return list representation if was previously a list!")
+
+        list_out = []
+        for key in sorted(self._values.keys()):
+            if key.isdigit():
+                list_index_of_key = int(key)
+                final_key = key
+            else:
+                raise ValueError("Keys beginning with a digit are expected!")
+
+            value = self._values[key]
+            if isinstance(value, FlatDict) and value.former_type != list:
+                value_to_add = value.as_dict()
+            elif isinstance(value, FlatDict):
+                value_to_add = value._as_list()
+            else:
+                value_to_add = value
+
+            if len(list_out) >= (list_index_of_key + 1):
+                list_out[list_index_of_key][final_key] = value_to_add
+            else:
+                list_out.append(value_to_add)
+
+        return list_out
 
     def clear(self):
         """Remove all items from the flat dictionary."""

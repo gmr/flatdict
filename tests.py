@@ -447,3 +447,52 @@ class FlatDictSetDelimiterTests(FlatDictDelimiterTests):
         self.object = flatdict.FlatDict(self.VALUES, '^')
         self.object.set_delimiter('-')
         self.keys = sorted([k.replace(':', '-') for k in self.KEYS])
+
+
+class FlatDictListAwarenessTests(unittest.TestCase):
+
+    DOCUMENT = {
+        "admiring": "allen",
+        "wonderful": "archimedes",
+        "quirky": [
+            {
+                "nifty": "khorana",
+                "nostalgic": "lichterman",
+                "gallant": [
+                    "bhaskara",
+                    "darwin",
+                    "meninsky"
+                ]
+            },
+            {
+                "nifty": "jennings",
+                "nostalgic": "hermann",
+            },
+            "condescending liskov"
+        ],
+        "flamboyant": "swartz"
+    }
+
+    KEYS = [
+        'admiring',
+        'wonderful',
+        'quirky:0:nifty',
+        'quirky:0:nostalgic',
+        'quirky:0:gallant:0',
+        'quirky:0:gallant:1',
+        'quirky:0:gallant:2',
+        'quirky:1:nifty',
+        'quirky:1:nostalgic',
+        'quirky:2',
+        'flamboyant'
+    ]
+
+    def setUp(self):
+        self.dict = flatdict.FlatDict(self.DOCUMENT, as_dict_list_awareness=True)
+        self.keys = sorted(self.KEYS)
+
+    def test_flatten_keys_are_created_as_expected(self):
+        self.assertEqual(self.keys, sorted([key for key in self.dict]))
+
+    def test_as_dict_returns_object_with_properly_constructed_lists(self):
+        self.assertEqual(self.DOCUMENT, self.dict.as_dict())
