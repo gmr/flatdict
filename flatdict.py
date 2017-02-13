@@ -130,7 +130,7 @@ class FlatDict(dict):
             raise TypeError("Can only return list representation if was previously a list!")
 
         list_out = []
-        for key in sorted(self._values.keys()):
+        for key in sorted(self._values.keys(), key=lambda x: int(x) if x.isdigit() else x):
             if key.isdigit():
                 list_index_of_key = int(key)
                 final_key = key
