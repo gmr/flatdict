@@ -19,12 +19,13 @@ class FlatDict(dict):
     # Should as_dict method be aware of lists while building response
     AS_DICT_LIST_AWARENESS = False
 
-    def __init__(self, value=None, delimiter=None, former_type=dict, as_dict_list_awareness=None):
+    def __init__(self, value=None, delimiter=None, former_type=dict, as_dict_list_awareness=None, flatten_lists=True):
         super(FlatDict, self).__init__()
         self._values = {}
         self._delimiter = delimiter or self.DELIMITER
         self.former_type = former_type
         self.as_dict_list_awareness = as_dict_list_awareness or self.AS_DICT_LIST_AWARENESS
+        self.flatten_lists = flatten_lists
         if isinstance(value, dict):
             for key in value.keys():
                 self.__setitem__(key, value[key])
@@ -70,7 +71,7 @@ class FlatDict(dict):
 
     def __setitem__(self, key, value):
         former_type = type(value)
-        if isinstance(value, (list, tuple)):
+        if self.flatten_lists and isinstance(value, (list, tuple)):
             value = dict((str(i), v) for (i, v) in enumerate(value))
         if isinstance(value, dict) and not isinstance(value, FlatDict):
             value = FlatDict(value, self._delimiter, former_type=former_type,
