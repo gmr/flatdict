@@ -19,6 +19,12 @@ class FlatDict(dict):
     # Should as_dict method be aware of lists while building response
     AS_DICT_LIST_AWARENESS = False
 
+    def __eq__(self, other):
+        return set(self.items()) == set(other.items())
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __init__(self, value=None, delimiter=None, former_type=dict, as_dict_list_awareness=None):
         super(FlatDict, self).__init__()
         self._values = {}

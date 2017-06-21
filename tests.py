@@ -226,12 +226,12 @@ class FlatDictTests(unittest.TestCase):
                                          'grault:baz': 3,
                                          'grault:qux': 4,
                                          'grault:corge': 5,
-                                         'foo:list:0': 'F',
-                                         'foo:list:1': 'O',
-                                         'foo:list:2': 'O',
-                                         'foo:tuple:0': 'F',
-                                         'foo:tuple:1': 0,
-                                         'foo:tuple:2': 0})
+                                         'list:0': 'F',
+                                         'list:1': 'O',
+                                         'list:2': 'O',
+                                         'tuple:0': 'F',
+                                         'tuple:1': 0,
+                                         'tuple:2': 0})
         response = self.object.pop(key)
         self.assertDictEqual(response, expectation)
         self.assertTrue(key not in self.object)
@@ -408,12 +408,12 @@ class FlatDictDelimiterTests(FlatDictTests):
                                          'grault-baz': 3,
                                          'grault-qux': 4,
                                          'grault-corge': 5,
-                                         'foo:list:0': 'F',
-                                         'foo:list:1': 'O',
-                                         'foo:list:2': 'O',
-                                         'foo:tuple:0': 'F',
-                                         'foo:tuple:1': 0,
-                                         'foo:tuple:2': 0})
+                                         'list-0': 'F',
+                                         'list-1': 'O',
+                                         'list-2': 'O',
+                                         'tuple-0': 'F',
+                                         'tuple-1': 0,
+                                         'tuple-2': 0})
         response = self.object.pop(key)
         self.assertDictEqual(response, expectation)
         self.assertTrue(key not in self.object)
@@ -429,12 +429,12 @@ class FlatDictDelimiterTests(FlatDictTests):
                                          'garply-bar': 1,
                                          'garply-baz': 2,
                                          'garply-qux-corge': 3,
-                                         'foo:list:0': 'F',
-                                         'foo:list:1': 'O',
-                                         'foo:list:2': 'O',
-                                         'foo:tuple:0': 'F',
-                                         'foo:tuple:1': 0,
-                                         'foo:tuple:2': 0})
+                                         'foo-list-0': 'F',
+                                         'foo-list-1': 'O',
+                                         'foo-list-2': 'O',
+                                         'foo-tuple-0': 'F',
+                                         'foo-tuple-1': 0,
+                                         'foo-tuple-2': 0})
         self.object.update({'foo-bar-baz': 4,
                             'foo-bar-qux': 5,
                             'foo-bar-corge': 6})
