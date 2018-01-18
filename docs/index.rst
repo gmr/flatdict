@@ -4,7 +4,7 @@
 
 FlatDict
 ========
-|Version| |Status| |Coverage| |License|
+|Version| |Status| |Coverage|
 
 **FlatDict** is a Python module for interacting with nested dicts as a single
 level dict with delimited keys. FlatDict supports Python 2.7+ and 3.4+.
@@ -112,6 +112,3 @@ Class Documentation
 
 .. |Coverage| image:: https://img.shields.io/codecov/c/github/gmr/flatdict.svg?
    :target: https://codecov.io/github/gmr/flatdict?branch=master
-
-.. |License| image:: https://img.shields.io/pypi/l/flatdict.svg?
-   :target: https://flatdict.readthedocs.io

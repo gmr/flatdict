@@ -219,6 +219,11 @@ class FlatDictTests(unittest.TestCase):
         })
         self.assertDictEqual(self.value, expectation)
 
+    def test_set_delimiter_collision(self):
+        value = flatdict.FlatDict({'foo_bar': {'qux': 1}})
+        with self.assertRaises(ValueError):
+            value.set_delimiter('_')
+
 
 class FlatterDictTests(FlatDictTests):
 

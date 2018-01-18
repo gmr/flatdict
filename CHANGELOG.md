@@ -9,6 +9,7 @@
 - REMOVED `FlatDict.has_key()` as it duplicates of `FlatDict.__contains__`
 - ADDED Python 3.5 and 3.6 to support matrix
 - REMOVED support for Python 2.6 and Python 3.2, 3.3
+- CHANGED `FlatDict.set_delimiter` to raise a `ValueError` if a key already exists with the delimiter value in it. (#8)
 
 ## 1.2.0 (2015-06-25)
 - ADDED Support lists and tuples as well as dicts. (#4 - [alex-hutton](https://github.com/alex-hutton))

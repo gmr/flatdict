@@ -288,11 +288,18 @@ class FlatDict(dict):
         return self.__getitem__(key)
 
     def set_delimiter(self, delimiter):
-        """Override the default or passed in delimiter with a new value.
+        """Override the default or passed in delimiter with a new value. If
+        the requested delimiter already exists in a key, a :exc:`ValueError`
+        will be raised.
 
         :param str delimiter: The delimiter to use
+        :raises: ValueError
 
         """
+        for key in self.keys():
+            if delimiter in key:
+                raise ValueError('Key {!r} collides with delimiter {!r}',
+                                 key, delimiter)
         self._delimiter = delimiter
         for key in self._values.keys():
             if isinstance(self._values[key], FlatDict):
