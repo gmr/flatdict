@@ -43,10 +43,10 @@ setuptools.setup(
     long_description=open('README.rst').read(),
     author='Gavin M. Roy',
     author_email='gavinmroy@gmail.com',
-    url='http://github.com/gmr/flatdict',
+    url='https://github.com/gmr/flatdict',
     package_data={'': ['LICENSE', 'README.rst']},
     tests_require=read_requirements('test-requirements.txt'),
     py_modules=['flatdict'],
-    license=open('LICENSE').read(),
+    license='BSD',
     classifiers=classifiers,
     zip_safe=True)

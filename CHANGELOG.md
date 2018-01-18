@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.1 (2018-01-18)
+- FIXED metadata for pypi upload
+
 ## 2.0.0 (2018-01-18)
 - Code efficiency refactoring and cleanup
 - Rewrote a majority of the tests, now at 100% coverage
