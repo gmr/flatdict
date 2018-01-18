@@ -103,6 +103,9 @@ class FlatDictTests(unittest.TestCase):
     def test_as_dict(self):
         self.assertDictEqual(self.value.as_dict(), self.EXPECT)
 
+    def test_casting_to_dict(self):
+        self.assertDictEqual(dict(self.value.items()), self.EXPECT)
+
     def test_missing_key_on_del(self):
         with self.assertRaises(KeyError):
             del self.value[str(uuid.uuid4())]
