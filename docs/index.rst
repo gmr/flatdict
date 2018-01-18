@@ -4,10 +4,10 @@
 
 FlatDict
 ========
-|Version| |Downloads| |Status| |Coverage| |License|
+|Version| |Status| |Coverage| |License|
 
 **FlatDict** is a Python module for interacting with nested dicts as a single
-level dict with delimited keys. :py:class:`~flatdict.FlatDict` supports Python 2.6+ and 3.2+.
+level dict with delimited keys. FlatDict supports Python 2.7+ and 3.4+.
 
 Jump to :ref:`installation`, :ref:`example`, :ref:`docs`, or :ref:`license`.
 
@@ -78,19 +78,21 @@ Example Use
 
     flat = flatdict.FlatDict(values)
 
-    print flat['foo:bar:baz']
+    print(flat['foo:bar:baz'])
 
     flat['test:value:key'] = 10
 
     del flat['test']
 
     for key in flat:
-        print key
+        print(key)
 
     for values in flat.itervalues():
-        print key
+        print(value)
 
-    print repr(flat.as_dict())
+    print(repr(flat.as_dict()))
+
+    print(flat == flat.as_dict())
 
 .. _docs:
 
@@ -102,17 +104,14 @@ Class Documentation
     :undoc-members:
     :inherited-members:
 
-.. |Version| image:: https://badge.fury.io/py/flatdict.svg?
+.. |Version| image:: https://img.shields.io/pypi/v/flatdict.svg?
    :target: http://badge.fury.io/py/flatdict
 
-.. |Status| image:: https://travis-ci.org/gmr/flatdict.svg?branch=master
+.. |Status| image:: https://img.shields.io/travis/gmr/flatdict.svg?
    :target: https://travis-ci.org/gmr/flatdict
 
-.. |Coverage| image:: https://codecov.io/github/gmr/flatdict/coverage.svg?branch=master
+.. |Coverage| image:: https://img.shields.io/codecov/c/github/gmr/flatdict.svg?
    :target: https://codecov.io/github/gmr/flatdict?branch=master
 
-.. |Downloads| image:: https://pypip.in/d/flatdict/badge.svg?
-   :target: https://pypi.python.org/pypi/flatdict
-
-.. |License| image:: https://pypip.in/license/flatdict/badge.svg?
-   :target: https://flatdict.readthedocs.org
+.. |License| image:: https://img.shields.io/pypi/l/flatdict.svg?
+   :target: https://flatdict.readthedocs.io

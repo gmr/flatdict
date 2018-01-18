@@ -1,16 +1,14 @@
 sudo: false
 language: python
 python:
-  - 2.6
   - 2.7
   - pypy
-  - 3.2
-  - 3.3
   - 3.4
+  - 3.5
+  - 3.6
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2 --download-cache $HOME/.pip-cache; fi
-  - pip install -r test-requirements.txt --download-cache $HOME/.pip-cache
-script: nosetests --with-coverage --cover-package=flatdict
+  - pip install -r test-requirements.txt
+script: nosetests
 after_success:
   - codecov
 deploy:
@@ -23,6 +21,3 @@ deploy:
     all_branches: true
   password:
     secure: "s1oAkXrQ3V533S250UJ5Ycop+XOyMZdM5kn/pBmMe5SFU0RCdp3RK0/Sj9o4z4+Tn7AkPyoBw6zneftdmykClJKGNfFLyGpkpCPscEHztEDrd1fCTd55qphAOkWhdx3x17T3cjXvcvu9810y6ekgAoDx1Tw+Qi6AJ2VL+sCZzmI="
-cache:
-  directories:
-    - $HOME/.pip-cache/
