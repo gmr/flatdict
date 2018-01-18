@@ -2,7 +2,7 @@
 key/value pair mapping of nested dictionaries.
 
 """
-__version__ = '1.2.0'
+__version__ = '2.0.0'
 
 
 class FlatDict(dict):
@@ -144,8 +144,10 @@ class FlatDict(dict):
         :rtype: str
 
         """
-        return '{{{}}}'.format(', '.join(['{!r}: {!r}'.format(str(k), str(v))
-                               for k, v in sorted(self.items())]))
+        return '{{{}}}'.format(', '.join([
+            '{!r}: {!r}'.format(str(k), str(v))
+            for k, v in sorted(self.items())
+        ]))
 
     def as_dict(self):
         """Return the :py:class:`~flatdict.FlatDict` as a :py:class:`dict`
@@ -298,8 +300,8 @@ class FlatDict(dict):
         """
         for key in self.keys():
             if delimiter in key:
-                raise ValueError('Key {!r} collides with delimiter {!r}',
-                                 key, delimiter)
+                raise ValueError('Key {!r} collides with delimiter {!r}', key,
+                                 delimiter)
         self._delimiter = delimiter
         for key in self._values.keys():
             if isinstance(self._values[key], FlatDict):
@@ -378,8 +380,8 @@ class FlatterDict(FlatDict):
             key = key.rsplit(':', 1)[0]
             if key in value:
                 return True
-            elif (isinstance(self[key], FlatterDict) and
-                  self[key].original_type in [list, set, tuple]):
+            elif (isinstance(self[key], FlatterDict)
+                  and self[key].original_type in [list, set, tuple]):
                 value[key] = self[key].original_type(self[key].values())
                 return True
         return False

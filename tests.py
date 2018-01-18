@@ -271,11 +271,20 @@ class FlatterDictTests(FlatDictTests):
 
     def expectation(self):
         expectation = dict(self.EXPECT)
-        expectation['foo:list'] = [expectation['foo:list:0'],expectation['foo:list:1'],expectation['foo:list:2']]
-        expectation['foo:set'] = {expectation['foo:set:0'],expectation['foo:set:1'],expectation['foo:set:2']}
-        expectation['foo:tuple'] = (expectation['foo:tuple:0'],expectation['foo:tuple:1'],expectation['foo:tuple:2'])
+        expectation['foo:list'] = [
+            expectation['foo:list:0'], expectation['foo:list:1'],
+            expectation['foo:list:2']
+        ]
+        expectation['foo:set'] = {
+            expectation['foo:set:0'], expectation['foo:set:1'],
+            expectation['foo:set:2']
+        }
+        expectation['foo:tuple'] = (expectation['foo:tuple:0'],
+                                    expectation['foo:tuple:1'],
+                                    expectation['foo:tuple:2'])
         for key in list(expectation.keys()):
-            if key.startswith('foo:list:') or key.startswith('foo:set:') or key.startswith('foo:tuple:'):
+            if key.startswith('foo:list:') or key.startswith(
+                    'foo:set:') or key.startswith('foo:tuple:'):
                 del expectation[key]
         return expectation
 
