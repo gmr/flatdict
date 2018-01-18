@@ -1,15 +1,15 @@
-==========
- FlatDict
-==========
+FlatDict
+========
 
-|Version| |Downloads| |Status| |Coverage| |License|
+|Version| |Status| |Coverage| |License|
 
-``FlatDict`` is a dict object that allows for single level, delimited key/value pair
-mapping of nested dictionaries. You can interact with FlatDict like a normal
-dictionary and access child dicts as you normally would or with the composited
+``FlatDict`` is a dict object that allows for single level, delimited key/value
+pair mapping of nested dictionaries. You can interact with FlatDict like a normal
+dictionary and access child dicts as you normally would or with the composite
 key.
 
-*For example:*
+Examples
+--------
 
 .. code-block:: python
 
@@ -51,11 +51,11 @@ Additionally, lists and tuples are also converted into dicts using enumerate().
 API
 ---
 
-``FlatDict`` has the same methods as dict in Python 2.6. In addition, it has a
+``FlatDict`` has the same methods as dict in Python 2.7. In addition, it has a
 ``FlatDict.as_dict`` method which will return a pure nested dictionary from a
 ``FlatDict`` value.
 
-Documentation is available at http://flatdict.readthedocs.org
+Documentation is available at http://flatdict.readthedocs.io
 
 Installation
 ------------
@@ -81,19 +81,21 @@ Example Use
 
     flat = flatdict.FlatDict(values)
 
-    print flat['foo:bar:baz']
+    print(flat['foo:bar:baz'])
 
     flat['test:value:key'] = 10
 
     del flat['test']
 
     for key in flat:
-        print key
+        print(key)
 
-    for value in flat.itervalues():
-        print value
+    for values in flat.itervalues():
+        print(value)
 
-    print repr(flat.as_dict())
+    print(repr(flat.as_dict()))
+
+    print(flat == flat.as_dict())
 
 .. |Version| image:: https://img.shields.io/pypi/v/flatdict.svg?
    :target: http://badge.fury.io/py/flatdict
@@ -104,8 +106,5 @@ Example Use
 .. |Coverage| image:: https://img.shields.io/codecov/c/github/gmr/flatdict.svg?
    :target: https://codecov.io/github/gmr/flatdict?branch=master
 
-.. |Downloads| image:: https://img.shields.io/pypi/dm/flatdict.svg?
-   :target: https://pypi.python.org/pypi/flatdict
-
 .. |License| image:: https://img.shields.io/pypi/l/flatdict.svg?
-   :target: https://flatdict.readthedocs.org
+   :target: https://flatdict.readthedocs.io
