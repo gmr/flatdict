@@ -90,8 +90,8 @@ Example Use
     for key in flat:
         print key
 
-    for values in flat.itervalues():
-        print key
+    for value in flat.itervalues():
+        print value
 
     print repr(flat.as_dict())
 
