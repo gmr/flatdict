@@ -6,3 +6,4 @@ dist
 .coverage
 env
 env27
+*.egg-info
