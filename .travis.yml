@@ -1,23 +1,64 @@
 sudo: false
 language: python
-python:
-  - 2.7
-  - pypy
-  - 3.4
-  - 3.5
-  - 3.6
+env:
+  global:
+   - PATH=$HOME/.local/bin:$PATH
+   - AWS_DEFAULT_REGION=us-east-1
+   - secure: "sitNFpdiQMbxHJIXkxcUfpSbAIdl9+bFYZcP2nQgwA3CShwRp1bAq2kWUsrzFjPhs+yxX5O+VVokRR0qsLJwmoH0AggWdYKhpTu7iGLoypCggnHh6I0Kt6Vepn6EjjkgkCzg/N+9gmZ1ZgtZ1NRDNdidEbyaWNZ1SlGkCNd0bys="
+   - secure: "rKQwYdFMnU/MSWDlqMWuE44Zg/3uHDkay2K0y1dPjGxaQ1OE7AL+6VabbMoQ3kV4kBkFqaVn4yd4XeGvzkoeMz97tTWRPgztpztC77O+aqSPvYPkMU+iZQCpzIEekPAo7e/XEnZsxWgo9Io6zFbJkdg4PhXISycx05cpZbTJkK8="
+
+stages:
+- test
+- coverage
+- name: deploy
+  if: tag IS present
+
 install:
-  - pip install -r test-requirements.txt
+- python setup.py develop
+- pip install awscli mock nose coverage
+
 script: nosetests
+
 after_success:
-  - codecov
-deploy:
-  distributions: sdist bdist_wheel
-  provider: pypi
-  user: crad
-  on:
-    python: 2.7
-    tags: true
-    all_branches: true
-  password:
-    secure: "s1oAkXrQ3V533S250UJ5Ycop+XOyMZdM5kn/pBmMe5SFU0RCdp3RK0/Sj9o4z4+Tn7AkPyoBw6zneftdmykClJKGNfFLyGpkpCPscEHztEDrd1fCTd55qphAOkWhdx3x17T3cjXvcvu9810y6ekgAoDx1Tw+Qi6AJ2VL+sCZzmI="
+- aws s3 cp .coverage "s3://com-gavinroy-travis/flatdict/$TRAVIS_BUILD_NUMBER/.coverage.${TRAVIS_PYTHON_VERSION}"
+
+jobs:
+  include:
+  - python: 2.7
+  - python: 3.4
+  - python: 3.5
+  - python: 3.6
+  - python: pypy
+  - python: pypy3
+  - stage: coverage
+    python: 3.6
+    services: []
+    install:
+    - pip install awscli coverage codecov
+    before_script: []
+    script:
+    - mkdir coverage
+    - aws s3 cp --recursive s3://com-gavinroy-travis/flatdict/$TRAVIS_BUILD_NUMBER/ coverage
+    - cd coverage
+    - coverage combine
+    - cd ..
+    - mv coverage/.coverage .
+    - coverage report
+    after_success: codecov
+  - stage: deploy
+    python: 3.6
+    services: []
+    install: true
+    before_script: []
+    script: true
+    after_success: []
+    deploy:
+      provider: pypi
+      user: crad
+      distributions: sdist bdist_wheel
+      on:
+        repo: gmr/flatdict
+        all_branches: true
+        tags: true
+        password:
+          secure: "s1oAkXrQ3V533S250UJ5Ycop+XOyMZdM5kn/pBmMe5SFU0RCdp3RK0/Sj9o4z4+Tn7AkPyoBw6zneftdmykClJKGNfFLyGpkpCPscEHztEDrd1fCTd55qphAOkWhdx3x17T3cjXvcvu9810y6ekgAoDx1Tw+Qi6AJ2VL+sCZzmI="
