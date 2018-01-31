@@ -211,7 +211,8 @@ class FlatDict(dict):
         :raises: RuntimeError
 
         """
-        yield from self.items()
+        for item in self.items():
+            yield item
 
     def iterkeys(self):
         """Iterate over the flat dictionary's keys. See the note for
@@ -225,7 +226,8 @@ class FlatDict(dict):
         :raises: RuntimeError
 
         """
-        yield from self.keys()
+        for key in self.keys():
+            yield key
 
     def itervalues(self):
         """Return an iterator over the flat dictionary's values. See the note
@@ -239,7 +241,8 @@ class FlatDict(dict):
         :raises: RuntimeError
 
         """
-        yield from self.values()
+        for value in self.values():
+            yield value
 
     def keys(self):
         """Return a copy of the flat dictionary's list of keys.
