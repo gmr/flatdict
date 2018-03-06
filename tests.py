@@ -241,6 +241,8 @@ class FlatDictTests(unittest.TestCase):
         self.value.set_delimiter('-')
         self.assertEqual([k.replace(':', '-') for k in self.KEYS],
                          self.value.keys())
+        self.assertEqual([self.value[k.replace(':', '-')] for k in self.KEYS],
+                         self.value.values())
 
     def test_update(self):
         expectation = flatdict.FlatDict(self.value.as_dict())
@@ -261,6 +263,6 @@ class FlatDictTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             value.set_delimiter('_')
 
-    def test_pickle(self):
+    def test_pickling(self):
         pickled = pickle.dumps(self.value)
         self.assertEqual(pickle.loads(pickled), self.value)
