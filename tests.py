@@ -2,7 +2,7 @@
 Unittests for flatdict.FlatDict
 
 """
-import copy
+import pickle
 import random
 import unittest
 import uuid
@@ -12,7 +12,7 @@ import flatdict
 
 class FlatDictTests(unittest.TestCase):
 
-    EXPECT = {
+    FLAT_EXPECTATION = {
         'foo:bar:baz': 0,
         'foo:bar:qux': 1,
         'foo:bar:corge': 2,
@@ -72,6 +72,39 @@ class FlatDictTests(unittest.TestCase):
         'waldo:wanda': 7
     }
 
+    AS_DICT = {
+        'foo': {
+            'bar': {
+                'baz': 0,
+                'qux': 1,
+                'corge': 2
+            },
+            'grault': {
+                'baz': 3,
+                'qux': 4,
+                'corge': 5
+            },
+            'list': ['F', 'O', 'O'],
+            'set': {10, 20, 30},
+            'tuple': ('F', 0, 0)
+        },
+        'garply': {
+            'foo': 0,
+            'bar': 1,
+            'baz': 2,
+            'qux': {
+                'corge': 3
+            }
+        },
+        'fred': 4,
+        'xyzzy': 'plugh',
+        'thud': 5,
+        'waldo': {
+            'fred': 6,
+            'wanda': 7
+        }
+    }
+
     def setUp(self):
         self.value = flatdict.FlatDict(self.VALUES, ':')
 
@@ -101,10 +134,14 @@ class FlatDictTests(unittest.TestCase):
             self.assertNotIn(key, self.value)
 
     def test_as_dict(self):
-        self.assertDictEqual(self.value.as_dict(), self.EXPECT)
+        self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
 
-    def test_casting_to_dict(self):
-        self.assertDictEqual(dict(self.value.items()), self.EXPECT)
+    def test_cast_to_dict(self):
+        value = dict(self.value)
+        self.assertDictEqual(value, self.FLAT_EXPECTATION)
+
+    def test_casting_items_to_dict(self):
+        self.assertEqual(dict(self.value.items()), self.FLAT_EXPECTATION)
 
     def test_missing_key_on_del(self):
         with self.assertRaises(KeyError):
@@ -152,11 +189,7 @@ class FlatDictTests(unittest.TestCase):
         self.assertDictEqual(self.value.as_dict(), copied.as_dict())
 
     def test_eq(self):
-        copied = self.value.copy()
-        self.assertDictEqual(self.value, copied)
-
-    def test_eq_dict(self):
-        self.assertTrue(self.value == self.value.as_dict())
+        self.assertEqual(self.value,  self.value.copy())
 
     def test_not_eq(self):
         value = flatdict.FlatDict({'foo': ['bar']})
@@ -188,11 +221,12 @@ class FlatDictTests(unittest.TestCase):
 
     def test_pop_top(self):
         expectation = self.value.__class__(self.VALUES['foo'])
-        self.assertDictEqual(expectation, self.value.pop('foo'))
+        self.assertEqual(expectation, self.value.pop('foo'))
         self.assertNotIn('foo', self.value)
 
-    def test_pop_default(self):
-        self.assertIsNone(self.value.pop(str(uuid.uuid4())))
+    def test_pop_no_default(self):
+        with self.assertRaises(KeyError):
+            self.value.pop(str(uuid.uuid4()))
 
     def test_set_default(self):
         value = flatdict.FlatDict()
@@ -209,7 +243,7 @@ class FlatDictTests(unittest.TestCase):
                          self.value.keys())
 
     def test_update(self):
-        expectation = copy.deepcopy(self.EXPECT)
+        expectation = flatdict.FlatDict(self.value.as_dict())
         expectation['foo:bar:baz'] = 4
         expectation['foo:bar:qux'] = 5
         expectation['foo:bar:corgie'] = 6
@@ -220,87 +254,13 @@ class FlatDictTests(unittest.TestCase):
             'foo:bar:corgie': 6,
             'foo:bar:waldo': 7
         })
-        self.assertDictEqual(self.value, expectation)
+        self.assertEqual(self.value, expectation)
 
     def test_set_delimiter_collision(self):
         value = flatdict.FlatDict({'foo_bar': {'qux': 1}})
         with self.assertRaises(ValueError):
             value.set_delimiter('_')
 
-
-class FlatterDictTests(FlatDictTests):
-
-    EXPECT = {
-        'foo:bar:baz': 0,
-        'foo:bar:qux': 1,
-        'foo:bar:corge': 2,
-        'foo:grault:baz': 3,
-        'foo:grault:qux': 4,
-        'foo:grault:corge': 5,
-        'foo:list:0': 'F',
-        'foo:list:1': 'O',
-        'foo:list:2': 'O',
-        'foo:set:0': 10,
-        'foo:set:1': 20,
-        'foo:set:2': 30,
-        'foo:tuple:0': 'F',
-        'foo:tuple:1': 0,
-        'foo:tuple:2': 0,
-        'garply:foo': 0,
-        'garply:bar': 1,
-        'garply:baz': 2,
-        'garply:qux:corge': 3,
-        'fred': 4,
-        'xyzzy': 'plugh',
-        'thud': 5,
-        'waldo:fred': 6,
-        'waldo:wanda': 7
-    }
-
-    KEYS = sorted([
-        'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:grault:baz',
-        'foo:grault:qux', 'foo:grault:corge', 'foo:list:0', 'foo:list:1',
-        'foo:list:2', 'foo:set:0', 'foo:set:1', 'foo:set:2', 'foo:tuple:0',
-        'foo:tuple:1', 'foo:tuple:2', 'garply:foo', 'garply:bar', 'garply:baz',
-        'garply:qux:corge', 'fred', 'thud', 'xyzzy', 'waldo:fred',
-        'waldo:wanda'
-    ])
-
-    def setUp(self):
-        self.value = flatdict.FlatterDict(self.VALUES, ':')
-
-    def expectation(self):
-        expectation = dict(self.EXPECT)
-        expectation['foo:list'] = [
-            expectation['foo:list:0'], expectation['foo:list:1'],
-            expectation['foo:list:2']
-        ]
-        expectation['foo:set'] = {
-            expectation['foo:set:0'], expectation['foo:set:1'],
-            expectation['foo:set:2']
-        }
-        expectation['foo:tuple'] = (expectation['foo:tuple:0'],
-                                    expectation['foo:tuple:1'],
-                                    expectation['foo:tuple:2'])
-        for key in list(expectation.keys()):
-            if key.startswith('foo:list:') or key.startswith(
-                    'foo:set:') or key.startswith('foo:tuple:'):
-                del expectation[key]
-        return expectation
-
-    def test_as_dict(self):
-        self.assertDictEqual(self.value.as_dict(), self.expectation())
-
-    def test_update(self):
-        expectation = self.expectation()
-        expectation['foo:bar:baz'] = 4
-        expectation['foo:bar:qux'] = 5
-        expectation['foo:bar:corgie'] = 6
-        expectation['foo:bar:waldo'] = 7
-        self.value.update({
-            'foo:bar:baz': 4,
-            'foo:bar:qux': 5,
-            'foo:bar:corgie': 6,
-            'foo:bar:waldo': 7
-        })
-        self.assertDictEqual(self.value, expectation)
+    def test_pickle(self):
+        pickled = pickle.dumps(self.value)
+        self.assertEqual(pickle.loads(pickled), self.value)

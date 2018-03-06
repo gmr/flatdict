@@ -2,10 +2,17 @@
 key/value pair mapping of nested dictionaries.
 
 """
+import collections
+import logging
+
 __version__ = '2.0.1'
 
+LOGGER = logging.getLogger(__name__)
 
-class FlatDict(dict):
+NO_DEFAULT = object()
+
+
+class FlatDict(collections.MutableMapping):
     """:py:class:`~flatdict.FlatDict` is a dictionary object that allows for
     single level, delimited key/value pair mapping of nested dictionaries.
     The default delimiter value is ``:`` but can be changed in the constructor
@@ -54,16 +61,14 @@ class FlatDict(dict):
         """Check for equality against the other value
 
         :param other: The value to compare
-        :type other: dict or FlatDict
+        :type other: FlatDict
         :rtype: bool
         :raises: TypeError
 
         """
-        if not isinstance(other, dict):
+        if not isinstance(other, self.__class__):
             raise TypeError
-        if hasattr(other, 'as_dict'):
-            return set(self.as_dict()) == set(other.as_dict())
-        return sorted(self.as_dict().items()) == sorted(other.items())
+        return sorted(self.as_dict()) == sorted(other.as_dict())
 
     def __ne__(self, other):
         """Check for inequality against the other value
@@ -84,20 +89,19 @@ class FlatDict(dict):
         :raises: KeyError
 
         """
-        if self._has_delimiter(key):
-            pk, ck = key.split(self._delimiter, 1)
-            return self._values[pk][ck]
-        return self._values[key]
+        values = self._values
+        for part in key.split(self._delimiter):
+            values = values[part]
+        return values
 
     def __iter__(self):
-        """Iterate over the flat dictionary's keys.
+        """Iterate over the flat dictionary key and values
 
         :rtype: Iterator
         :raises: RuntimeError
 
         """
-        for key in self.keys():
-            yield key
+        return iter(self.keys())
 
     def __len__(self):
         """Return the number of items.
@@ -106,6 +110,14 @@ class FlatDict(dict):
 
         """
         return len(self.keys())
+
+    def __reduce__(self):
+        """Return state information for pickling
+
+        :rtype: tuple
+
+        """
+        return type(self), (self.as_dict(), self._delimiter)
 
     def __repr__(self):
         """Return the string representation of the instance.
@@ -155,8 +167,22 @@ class FlatDict(dict):
         :rtype: dict
 
         """
-        return dict([(k, v.as_dict() if isinstance(v, FlatDict) else v)
-                     for k, v in self.items()])
+        out = dict({})
+        for key in self.keys():
+            if self._has_delimiter(key):
+                pk, ck = key.split(self._delimiter, 1)
+                if self._has_delimiter(ck):
+                    ck = ck.split(self._delimiter, 1)[0]
+                if isinstance(self._values[pk], FlatDict) and pk not in out:
+                    out[pk] = dict()
+                if isinstance(self._values[pk][ck], FlatDict):
+                    out[pk][ck] = self._values[pk][ck].as_dict()
+                else:
+                    out[pk][ck] = self._values[pk][ck]
+            else:
+                out[key] = self._values[key]
+        LOGGER.debug('Returning %s: %r', type(out), out)
+        return out
 
     def clear(self):
         """Remove all items from the flat dictionary."""
@@ -168,7 +194,7 @@ class FlatDict(dict):
         :rtype: flatdict.FlatDict
 
         """
-        return self.__class__(self.as_dict())
+        return self.__class__(self.as_dict(), delimiter=self._delimiter)
 
     def get(self, key, d=None):
         """Return the value for key if key is in the flat dictionary, else
@@ -253,13 +279,13 @@ class FlatDict(dict):
         """
         keys = []
         for key, value in self._values.items():
-            if isinstance(value, dict):
+            if isinstance(value, (FlatDict, dict)):
                 keys += [self._delimiter.join([key, k]) for k in value.keys()]
             else:
                 keys.append(key)
         return sorted(keys)
 
-    def pop(self, key, default=None):
+    def pop(self, key, default=NO_DEFAULT):
         """If key is in the flat dictionary, remove it and return its value,
         else return default. If default is not given and key is not in the
         dictionary, :exc:`KeyError` is raised.
@@ -269,9 +295,9 @@ class FlatDict(dict):
         :rtype: mixed
 
         """
-        if key not in self:
+        if key not in self and default != NO_DEFAULT:
             return default
-        value = self.__getitem__(key)
+        value = self[key]
         self.__delitem__(key)
         return value
 
@@ -377,7 +403,7 @@ class FlatterDict(FlatDict):
 
         """
         while self._has_delimiter(key):
-            key = key.rsplit(':', 1)[0]
+            key = key.rsplit(self._delimiter, 1)[0]
             if key in value:
                 return True
             elif (isinstance(self[key], FlatterDict)
