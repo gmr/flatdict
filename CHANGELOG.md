@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 (2018-03-06)
+- CHANGED `FlatDict.as_dict` to return the nested data structure based upon delimiters, coercing `FlatDict` objects to `dict`.
+- CHANGED `FlatDict` to extend `collections.MutableMapping` instead of dict
+- CHANGED `dict(FlatDict())` to return a shallow `dict` instance with the delimited keys as strings
+- CHANGED `FlatDict.__eq__` to only evaluate against dict or the same class
+
 ## 2.0.1 (2018-01-18)
 - FIXED metadata for pypi upload
 

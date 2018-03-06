@@ -5,7 +5,7 @@ key/value pair mapping of nested dictionaries.
 import collections
 import logging
 
-__version__ = '2.0.1'
+__version__ = '3.0.0'
 
 LOGGER = logging.getLogger(__name__)
 
@@ -66,7 +66,9 @@ class FlatDict(collections.MutableMapping):
         :raises: TypeError
 
         """
-        if not isinstance(other, self.__class__):
+        if isinstance(other, dict):
+            return sorted(self.as_dict()) == sorted(other)
+        elif not isinstance(other, self.__class__):
             raise TypeError
         return sorted(self.as_dict()) == sorted(other.as_dict())
 

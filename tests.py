@@ -191,6 +191,9 @@ class FlatDictTests(unittest.TestCase):
     def test_eq(self):
         self.assertEqual(self.value,  self.value.copy())
 
+    def test_eq_dict(self):
+        self.assertEqual(self.value,  self.value.as_dict())
+
     def test_not_eq(self):
         value = flatdict.FlatDict({'foo': ['bar']})
         self.assertFalse(self.value == value)
@@ -223,6 +226,10 @@ class FlatDictTests(unittest.TestCase):
         expectation = self.value.__class__(self.VALUES['foo'])
         self.assertEqual(expectation, self.value.pop('foo'))
         self.assertNotIn('foo', self.value)
+
+    def test_pop_default(self):
+        default = str(uuid.uuid4())
+        self.assertEqual(self.value.pop(str(uuid.uuid4()), default), default)
 
     def test_pop_no_default(self):
         with self.assertRaises(KeyError):
