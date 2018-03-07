@@ -61,5 +61,5 @@ jobs:
       on:
         all_branches: true
         tags: true
-        password:
-          secure: "s1oAkXrQ3V533S250UJ5Ycop+XOyMZdM5kn/pBmMe5SFU0RCdp3RK0/Sj9o4z4+Tn7AkPyoBw6zneftdmykClJKGNfFLyGpkpCPscEHztEDrd1fCTd55qphAOkWhdx3x17T3cjXvcvu9810y6ekgAoDx1Tw+Qi6AJ2VL+sCZzmI="
+      password:
+        secure: "s1oAkXrQ3V533S250UJ5Ycop+XOyMZdM5kn/pBmMe5SFU0RCdp3RK0/Sj9o4z4+Tn7AkPyoBw6zneftdmykClJKGNfFLyGpkpCPscEHztEDrd1fCTd55qphAOkWhdx3x17T3cjXvcvu9810y6ekgAoDx1Tw+Qi6AJ2VL+sCZzmI="
