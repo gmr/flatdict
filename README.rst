@@ -51,11 +51,7 @@ Additionally, lists and tuples are also converted into dicts using enumerate().
 API
 ---
 
-``FlatDict`` has the same methods as dict in Python 2.7. In addition, it has a
-``FlatDict.as_dict`` method which will return a pure nested dictionary from a
-``FlatDict`` value.
-
-Documentation is available at http://flatdict.readthedocs.io
+Documentation is available at https://flatdict.readthedocs.io
 
 Installation
 ------------
@@ -68,6 +64,8 @@ Example Use
 -----------
 
 .. code-block:: python
+
+    import pprint
 
     import flatdict
 
@@ -93,7 +91,9 @@ Example Use
     for values in flat.itervalues():
         print(value)
 
-    print(repr(flat.as_dict()))
+    pprint.pprint(flat.as_dict())
+
+    pprint.pprint(dict(flat))
 
     print(flat == flat.as_dict())
 
