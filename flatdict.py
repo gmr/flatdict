@@ -374,42 +374,77 @@ class FlatterDict(FlatDict):
      the implementation added in v1.2 of FlatDict.
 
     """
-    _COERCE = (list, tuple, set, dict)
+    _COERCE = (list, tuple, set, dict, FlatDict)
+    _ARRAYS = (list, set, tuple)
 
     def __init__(self, value=None, delimiter=':'):
         self.original_type = type(value)
-        if self.original_type in [list, set, tuple]:
+        if self.original_type in self._ARRAYS:
             value = dict([(str(i), v) for i, v in enumerate(value)])
         super(FlatterDict, self).__init__(value, delimiter)
 
+    def __setitem__(self, key, value):
+        """Assign the value to the key, dynamically building nested
+        FlatDict items where appropriate.
+
+        :param mixed key: The key for the item
+        :param mixed value: The value for the item
+        :raises: TypeError
+
+        """
+        if isinstance(value, self._COERCE) and \
+                not isinstance(value, FlatterDict):
+            value = self.__class__(value, self._delimiter)
+        if self._has_delimiter(key):
+            pk, ck = key.split(self._delimiter, 1)
+            if pk not in self._values:
+                self._values[pk] = self.__class__({ck: value}, self._delimiter)
+                return
+            if getattr(self._values[pk],
+                       'original_type', None) in self._ARRAYS:
+                try:
+                    int(ck)
+                except ValueError:
+                    raise TypeError(
+                        'Assignment to invalid type for key {}{}{}'.format(
+                            pk, self._delimiter, ck))
+            elif not isinstance(self._values[pk], FlatterDict):
+                raise TypeError(
+                    'Assignment to invalid type for key {}'.format(pk))
+            self._values[pk][ck] = value
+        else:
+            self._values[key] = value
+
     def as_dict(self):
-        """Return the :py:class:`~flatdict.FlatDict` as a :py:class:`dict`,
-        or if the class was originally populated as a list or tuple, return
-        it as such.
+        """Return the :py:class:`~flatdict.FlatterDict` as a :py:class:`dict`
 
         :rtype: dict
 
         """
-        value = {}
+        out = dict({})
         for key in self.keys():
-            if self._maybe_convert(key, value):
-                continue
-            value[key] = self[key]
-        return value
+            if self._has_delimiter(key):
+                pk, ck = key.split(self._delimiter, 1)
+                if self._has_delimiter(ck):
+                    ck = ck.split(self._delimiter, 1)[0]
+                if isinstance(self._values[pk], FlatterDict) and pk not in out:
+                    out[pk] = dict()
+                if isinstance(self._values[pk][ck], FlatterDict):
+                    if self._values[pk][ck].original_type == dict:
+                        out[pk][ck] = self._values[pk][ck].as_dict()
+                    elif self._values[pk][ck].original_type == list:
+                        out[pk][ck] = self._child_as_list(pk, ck)
+                    elif self._values[pk][ck].original_type == set:
+                        out[pk][ck] = set(self._child_as_list(pk, ck))
+                    elif self._values[pk][ck].original_type == tuple:
+                        out[pk][ck] = tuple(self._child_as_list(pk, ck))
+                else:
+                    out[pk][ck] = self._values[pk][ck]
+            else:
+                out[key] = self._values[key]
+        return out
 
-    def _maybe_convert(self, key, value):
-        """Check to see if the value of self[key] should be converted to
-        a list, set, or tuple.
-
-        :rtype: bool
-
-        """
-        while self._has_delimiter(key):
-            key = key.rsplit(self._delimiter, 1)[0]
-            if key in value:
-                return True
-            elif (isinstance(self[key], FlatterDict)
-                  and self[key].original_type in [list, set, tuple]):
-                value[key] = self[key].original_type(self[key].values())
-                return True
-        return False
+    def _child_as_list(self, pk, ck):
+        return [self._values[pk][ck][k]
+                for k in sorted(self._values[pk][ck].keys(),
+                                key=lambda x: int(x))]

@@ -36,7 +36,6 @@
 - ADDED `FlatDict.set_delimiter()`
 - Bugfixes and improvements from [naiquevin](https://github.com/naiquevin)
 
-
 ## 1.0.0 (2012-08-10)
 
 - Initial release
