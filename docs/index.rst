@@ -66,6 +66,8 @@ Example Use
 
 .. code-block:: python
 
+    import pprint
+
     import flatdict
 
     values = {'foo': {'bar': {'baz': 0,
@@ -90,7 +92,9 @@ Example Use
     for values in flat.itervalues():
         print(value)
 
-    print(repr(flat.as_dict()))
+    pprint.pprint(flat.as_dict())
+
+    pprint.pprint(dict(flat))
 
     print(flat == flat.as_dict())
 
