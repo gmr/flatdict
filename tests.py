@@ -299,6 +299,7 @@ class FlatterDictTests(FlatDictTests):
         'foo:tuple:0': 'F',
         'foo:tuple:1': 0,
         'foo:tuple:2': 0,
+        'foo:abc:def': True,
         'garply:foo': 0,
         'garply:bar': 1,
         'garply:baz': 2,
@@ -316,7 +317,7 @@ class FlatterDictTests(FlatDictTests):
         'foo:list:2', 'foo:set:0', 'foo:set:1', 'foo:set:2', 'foo:tuple:0',
         'foo:tuple:1', 'foo:tuple:2', 'garply:foo', 'garply:bar', 'garply:baz',
         'garply:qux:corge', 'fred', 'thud', 'xyzzy', 'waldo:fred',
-        'waldo:wanda'
+        'waldo:wanda', 'foo:abc:def'
     ])
 
     VALUES = {
@@ -333,7 +334,8 @@ class FlatterDictTests(FlatDictTests):
             },
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
-            'tuple': ('F', 0, 0)
+            'tuple': ('F', 0, 0),
+            'abc': {'def': True}
         },
         'garply': {
             'foo': 0,
@@ -364,7 +366,8 @@ class FlatterDictTests(FlatDictTests):
             },
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
-            'tuple': ('F', 0, 0)
+            'tuple': ('F', 0, 0),
+            'abc': {'def': True}
         },
         'garply': {
             'foo': 0,

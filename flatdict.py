@@ -427,14 +427,14 @@ class FlatterDict(FlatDict):
                 if isinstance(self._values[pk], FlatterDict) and pk not in out:
                     out[pk] = dict()
                 if isinstance(self._values[pk][ck], FlatterDict):
-                    if self._values[pk][ck].original_type == dict:
-                        out[pk][ck] = self._values[pk][ck].as_dict()
+                    if self._values[pk][ck].original_type == tuple:
+                        out[pk][ck] = tuple(self._child_as_list(pk, ck))
                     elif self._values[pk][ck].original_type == list:
                         out[pk][ck] = self._child_as_list(pk, ck)
                     elif self._values[pk][ck].original_type == set:
                         out[pk][ck] = set(self._child_as_list(pk, ck))
-                    elif self._values[pk][ck].original_type == tuple:
-                        out[pk][ck] = tuple(self._child_as_list(pk, ck))
+                    elif self._values[pk][ck].original_type == dict:
+                        out[pk][ck] = self._values[pk][ck].as_dict()
                 else:
                     out[pk][ck] = self._values[pk][ck]
             else:
