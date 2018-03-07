@@ -5,6 +5,7 @@
 - CHANGED `FlatDict` to extend `collections.MutableMapping` instead of dict
 - CHANGED `dict(FlatDict())` to return a shallow `dict` instance with the delimited keys as strings
 - CHANGED `FlatDict.__eq__` to only evaluate against dict or the same class
+- FIXED `FlatterDict` behavior to match expectations from pre-2.0 releases.
 
 ## 2.0.1 (2018-01-18)
 - FIXED metadata for pypi upload

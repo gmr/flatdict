@@ -3,20 +3,17 @@ key/value pair mapping of nested dictionaries.
 
 """
 import collections
-import logging
 
 __version__ = '3.0.0'
-
-LOGGER = logging.getLogger(__name__)
 
 NO_DEFAULT = object()
 
 
 class FlatDict(collections.MutableMapping):
-    """:py:class:`~flatdict.FlatDict` is a dictionary object that allows for
+    """:class:`~flatdict.FlatDict` is a dictionary object that allows for
     single level, delimited key/value pair mapping of nested dictionaries.
     The default delimiter value is ``:`` but can be changed in the constructor
-    or by calling :py:meth:`FlatDict.set_delimiter`.
+    or by calling :meth:`FlatDict.set_delimiter`.
 
     """
     _COERCE = dict
@@ -164,7 +161,7 @@ class FlatDict(collections.MutableMapping):
         ]))
 
     def as_dict(self):
-        """Return the :py:class:`~flatdict.FlatDict` as a :py:class:`dict`
+        """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
 
         :rtype: dict
 
@@ -183,7 +180,6 @@ class FlatDict(collections.MutableMapping):
                     out[pk][ck] = self._values[pk][ck]
             else:
                 out[key] = self._values[key]
-        LOGGER.debug('Returning %s: %r', type(out), out)
         return out
 
     def clear(self):
@@ -229,7 +225,7 @@ class FlatDict(collections.MutableMapping):
 
     def iteritems(self):
         """Return an iterator over the flat dictionary's (key, value) pairs.
-        See the note for :py:meth:`flatdict.FlatDict.items`.
+        See the note for :meth:`flatdict.FlatDict.items`.
 
         Using ``iteritems()`` while adding or deleting entries in the flat
         dictionary may raise :exc:`RuntimeError` or fail to iterate over all
@@ -244,7 +240,7 @@ class FlatDict(collections.MutableMapping):
 
     def iterkeys(self):
         """Iterate over the flat dictionary's keys. See the note for
-        :py:meth:`flatdict.FlatDict.items`.
+        :meth:`flatdict.FlatDict.items`.
 
         Using ``iterkeys()`` while adding or deleting entries in the flat
         dictionary may raise :exc:`RuntimeError` or fail to iterate over all
@@ -259,7 +255,7 @@ class FlatDict(collections.MutableMapping):
 
     def itervalues(self):
         """Return an iterator over the flat dictionary's values. See the note
-        :py:meth:`flatdict.FlatDict.items`.
+        :meth:`flatdict.FlatDict.items`.
 
         Using ``itervalues()`` while adding or deleting entries in the flat
         dictionary may raise a :exc:`RuntimeError` or fail to iterate over all
@@ -274,7 +270,7 @@ class FlatDict(collections.MutableMapping):
 
     def keys(self):
         """Return a copy of the flat dictionary's list of keys.
-        See the note for :py:meth:`flatdict.FlatDict.items`.
+        See the note for :meth:`flatdict.FlatDict.items`.
 
         :rtype: list
 
@@ -352,7 +348,7 @@ class FlatDict(collections.MutableMapping):
 
     def values(self):
         """Return a copy of the flat dictionary's list of values. See the note
-        for :py:meth:`flatdict.FlatDict.items`.
+        for :meth:`flatdict.FlatDict.items`.
 
         :rtype: list
 
@@ -369,7 +365,7 @@ class FlatDict(collections.MutableMapping):
 
 
 class FlatterDict(FlatDict):
-    """Like :py:class:`~flatdict.FlatDict` but also coerces lists and sets
+    """Like :class:`~flatdict.FlatDict` but also coerces lists and sets
      to child-dict instances with the offset as the key. Alternative to
      the implementation added in v1.2 of FlatDict.
 
@@ -416,7 +412,8 @@ class FlatterDict(FlatDict):
             self._values[key] = value
 
     def as_dict(self):
-        """Return the :py:class:`~flatdict.FlatterDict` as a :py:class:`dict`
+        """Return the :class:`~flatdict.FlatterDict` as a nested
+        :class:`dict`.
 
         :rtype: dict
 
@@ -445,6 +442,14 @@ class FlatterDict(FlatDict):
         return out
 
     def _child_as_list(self, pk, ck):
+        """Returns a list of values from the child FlatterDict instance
+        with string based integer keys.
+
+        :param str pk: The parent key
+        :param str ck: The child key
+        :rtype: list
+
+        """
         return [self._values[pk][ck][k]
                 for k in sorted(self._values[pk][ck].keys(),
                                 key=lambda x: int(x))]
