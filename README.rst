@@ -88,7 +88,7 @@ Example Use
     for key in flat:
         print(key)
 
-    for values in flat.itervalues():
+    for value in flat.itervalues():
         print(value)
 
     pprint.pprint(flat.as_dict())
