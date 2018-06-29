@@ -8,6 +8,12 @@ __version__ = '3.0.0'
 
 NO_DEFAULT = object()
 
+# Python 2/3 string compat
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 class FlatDict(collections.MutableMapping):
     """:class:`~flatdict.FlatDict` is a dictionary object that allows for
@@ -361,7 +367,7 @@ class FlatDict(collections.MutableMapping):
         :rtype: bool
 
         """
-        return isinstance(key, str) and self._delimiter in key
+        return isinstance(key, basestring) and self._delimiter in key
 
 
 class FlatterDict(FlatDict):
