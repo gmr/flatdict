@@ -4,6 +4,7 @@ Unittests for flatdict.FlatDict
 """
 import pickle
 import random
+import sys
 import unittest
 import uuid
 
@@ -277,6 +278,12 @@ class FlatDictTests(unittest.TestCase):
     def test_pickling(self):
         pickled = pickle.dumps(self.value)
         self.assertEqual(pickle.loads(pickled), self.value)
+
+    @unittest.skipIf(sys.version_info.major > 2, 'python2 unicode test')
+    def test_python2_unicode_support(self):
+        flat = self.TEST_CLASS()
+        flat[u'key1:key2'] = u'value1'
+        self.assertEqual(flat.as_dict(), {'key1': {'key2': 'value1'}})
 
 
 class FlatterDictTests(FlatDictTests):
