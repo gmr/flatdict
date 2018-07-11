@@ -28,6 +28,7 @@ jobs:
   - python: 3.4
   - python: 3.5
   - python: 3.6
+  - python: 3.7
   - python: pypy
   - python: pypy3
   - stage: coverage
