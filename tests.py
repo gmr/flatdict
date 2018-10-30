@@ -164,12 +164,14 @@ class FlatDictTests(unittest.TestCase):
             sorted(self.KEYS), sorted([k for k in iter(self.value)]))
 
     def test_repr_value(self):
-        val = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
-        self.assertEqual("\"{'baz:qux': 'corgie', 'foo': 'bar'}\"", repr(val))
+        value = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
+        self.assertIn(str(value), repr(value))
+        self.assertEqual(repr(value)[0:len(self.TEST_CLASS.__name__) + 1],
+                         '<{}'.format(self.TEST_CLASS.__name__))
 
     def test_str_value(self):
-        val = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
-        self.assertEqual("{'baz:qux': 'corgie', 'foo': 'bar'}", str(val))
+        val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
+        self.assertEqual("{'baz:qux': 'corgie', 'foo': 1}", str(val))
 
     def test_incorrect_assignment_raises(self):
         value = self.TEST_CLASS({'foo': ['bar'], 'qux': 1})
@@ -284,6 +286,12 @@ class FlatDictTests(unittest.TestCase):
         flat = self.TEST_CLASS()
         flat[u'key1:key2'] = u'value1'
         self.assertEqual(flat.as_dict(), {'key1': {'key2': 'value1'}})
+
+    def test_empty_dict_as_value(self):
+        expectation = {'foo': {'bar': {}}}
+        flat = self.TEST_CLASS(expectation)
+        value = flat.as_dict()
+        self.assertDictEqual(value, expectation)
 
 
 class FlatterDictTests(FlatDictTests):

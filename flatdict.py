@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 import collections
 
-__version__ = '3.0.1'
+__version__ = '3.1.0'
 
 NO_DEFAULT = object()
 
@@ -130,7 +130,8 @@ class FlatDict(collections.MutableMapping):
         :rtype: str
 
         """
-        return '"{}"'.format(str(self))
+        return '<{} id={} {}>"'.format(
+            self.__class__.__name__, id(self), str(self))
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -161,10 +162,8 @@ class FlatDict(collections.MutableMapping):
         :rtype: str
 
         """
-        return '{{{}}}'.format(', '.join([
-            '{!r}: {!r}'.format(str(k), str(v))
-            for k, v in sorted(self.items())
-        ]))
+        return '{{{}}}'.format(', '.join(
+            ['{!r}: {!r}'.format(k, self[k]) for k in self.keys()]))
 
     def as_dict(self):
         """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
@@ -284,7 +283,8 @@ class FlatDict(collections.MutableMapping):
         keys = []
         for key, value in self._values.items():
             if isinstance(value, (FlatDict, dict)):
-                keys += [self._delimiter.join([key, k]) for k in value.keys()]
+                nested = [self._delimiter.join([key, k]) for k in value.keys()]
+                keys += nested if nested else [key]
             else:
                 keys.append(key)
         return sorted(keys)
