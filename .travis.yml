@@ -32,7 +32,7 @@ jobs:
   - python: pypy
   - python: pypy3
   - stage: coverage
-    if: repo IS gmr/flatdict
+    if: repo = gmr/flatdict
     python: 3.6
     services: []
     install:
@@ -48,7 +48,7 @@ jobs:
     - coverage report
     after_success: codecov
   - stage: deploy
-    if: repo IS gmr/flatdict
+    if: repo = gmr/flatdict
     python: 3.6
     services: []
     install: true
