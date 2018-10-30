@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 import collections
 
-__version__ = '3.0.1'
+__version__ = '3.1.0'
 
 NO_DEFAULT = object()
 

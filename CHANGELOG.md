@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.0 (2018-10-30)
+- FIXED `FlatDict` behavior with empty iteratable values
+- CHANGED behavior when casting to str or repr (#23)
+
+## 3.0.1 (2018-07-01)
+- Add 3.7 to Trove Classifiers
+- Add Python 2.7 unicode string compatibility (#22 [nvllsvm](https://github.com/nvllsvm))
+
 ## 3.0.0 (2018-03-06)
 - CHANGED `FlatDict.as_dict` to return the nested data structure based upon delimiters, coercing `FlatDict` objects to `dict`.
 - CHANGED `FlatDict` to extend `collections.MutableMapping` instead of dict
