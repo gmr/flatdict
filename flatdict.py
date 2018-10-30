@@ -284,7 +284,8 @@ class FlatDict(collections.MutableMapping):
         keys = []
         for key, value in self._values.items():
             if isinstance(value, (FlatDict, dict)):
-                keys += [self._delimiter.join([key, k]) for k in value.keys()]
+                nested = [self._delimiter.join([key, k]) for k in value.keys()]
+                keys += nested if nested else [key]
             else:
                 keys.append(key)
         return sorted(keys)

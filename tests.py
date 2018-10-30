@@ -285,6 +285,12 @@ class FlatDictTests(unittest.TestCase):
         flat[u'key1:key2'] = u'value1'
         self.assertEqual(flat.as_dict(), {'key1': {'key2': 'value1'}})
 
+    def test_empty_dict_as_value(self):
+        expectation = {'foo': {'bar': {}}}
+        flat = self.TEST_CLASS(expectation)
+        value = flat.as_dict()
+        self.assertDictEqual(value, expectation)
+
 
 class FlatterDictTests(FlatDictTests):
 
