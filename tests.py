@@ -164,12 +164,14 @@ class FlatDictTests(unittest.TestCase):
             sorted(self.KEYS), sorted([k for k in iter(self.value)]))
 
     def test_repr_value(self):
-        val = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
-        self.assertEqual("\"{'baz:qux': 'corgie', 'foo': 'bar'}\"", repr(val))
+        value = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
+        self.assertIn(str(value), repr(value))
+        self.assertEqual(repr(value)[0:len(self.TEST_CLASS.__name__) + 1],
+                         '<{}'.format(self.TEST_CLASS.__name__))
 
     def test_str_value(self):
-        val = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
-        self.assertEqual("{'baz:qux': 'corgie', 'foo': 'bar'}", str(val))
+        val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
+        self.assertEqual("{'baz:qux': 'corgie', 'foo': 1}", str(val))
 
     def test_incorrect_assignment_raises(self):
         value = self.TEST_CLASS({'foo': ['bar'], 'qux': 1})

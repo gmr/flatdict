@@ -130,7 +130,8 @@ class FlatDict(collections.MutableMapping):
         :rtype: str
 
         """
-        return '"{}"'.format(str(self))
+        return '<{} id={} {}>"'.format(
+            self.__class__.__name__, id(self), str(self))
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -161,10 +162,8 @@ class FlatDict(collections.MutableMapping):
         :rtype: str
 
         """
-        return '{{{}}}'.format(', '.join([
-            '{!r}: {!r}'.format(str(k), str(v))
-            for k, v in sorted(self.items())
-        ]))
+        return '{{{}}}'.format(', '.join(
+            ['{!r}: {!r}'.format(k, self[k]) for k in self.keys()]))
 
     def as_dict(self):
         """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
