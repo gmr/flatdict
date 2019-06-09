@@ -160,14 +160,15 @@ class FlatDictTests(unittest.TestCase):
         self.assertNotIn('garply', self.value)
 
     def test_iter_keys(self):
-        self.assertListEqual(
-            sorted(self.KEYS), sorted([k for k in iter(self.value)]))
+        self.assertListEqual(sorted(self.KEYS),
+                             sorted([k for k in iter(self.value)]))
 
     def test_repr_value(self):
         value = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
         self.assertIn(str(value), repr(value))
-        self.assertEqual(repr(value)[0:len(self.TEST_CLASS.__name__) + 1],
-                         '<{}'.format(self.TEST_CLASS.__name__))
+        self.assertEqual(
+            repr(value)[0:len(self.TEST_CLASS.__name__) + 1],
+            '<{}'.format(self.TEST_CLASS.__name__))
 
     def test_str_value(self):
         val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
@@ -196,10 +197,10 @@ class FlatDictTests(unittest.TestCase):
         self.assertDictEqual(self.value.as_dict(), copied.as_dict())
 
     def test_eq(self):
-        self.assertEqual(self.value,  self.value.copy())
+        self.assertEqual(self.value, self.value.copy())
 
     def test_eq_dict(self):
-        self.assertEqual(self.value,  self.value.as_dict())
+        self.assertEqual(self.value, self.value.as_dict())
 
     def test_not_eq(self):
         value = self.TEST_CLASS({'foo': ['bar']})
@@ -302,12 +303,15 @@ class FlatterDictTests(FlatDictTests):
         'foo:bar:baz': 0,
         'foo:bar:qux': 1,
         'foo:bar:corge': 2,
+        'foo:bar:list:0': -1,
+        'foo:bar:list:1': -2,
+        'foo:bar:list:2': -3,
         'foo:grault:baz': 3,
         'foo:grault:qux': 4,
         'foo:grault:corge': 5,
         'foo:list:0': 'F',
         'foo:list:1': 'O',
-        'foo:list:2':'O',
+        'foo:list:2': 'O',
         'foo:set:0': 10,
         'foo:set:1': 20,
         'foo:set:2': 30,
@@ -327,10 +331,11 @@ class FlatterDictTests(FlatDictTests):
     }
 
     KEYS = sorted([
-        'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:grault:baz',
-        'foo:grault:qux', 'foo:grault:corge', 'foo:list:0', 'foo:list:1',
-        'foo:list:2', 'foo:set:0', 'foo:set:1', 'foo:set:2', 'foo:tuple:0',
-        'foo:tuple:1', 'foo:tuple:2', 'garply:foo', 'garply:bar', 'garply:baz',
+        'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:bar:list:0',
+        'foo:bar:list:1', 'foo:bar:list:2', 'foo:grault:baz', 'foo:grault:qux',
+        'foo:grault:corge', 'foo:list:0', 'foo:list:1', 'foo:list:2',
+        'foo:set:0', 'foo:set:1', 'foo:set:2', 'foo:tuple:0', 'foo:tuple:1',
+        'foo:tuple:2', 'garply:foo', 'garply:bar', 'garply:baz',
         'garply:qux:corge', 'fred', 'thud', 'xyzzy', 'waldo:fred',
         'waldo:wanda', 'foo:abc:def'
     ])
@@ -340,7 +345,8 @@ class FlatterDictTests(FlatDictTests):
             'bar': {
                 'baz': 0,
                 'qux': 1,
-                'corge': 2
+                'corge': 2,
+                'list': [-1, -2, -3]
             },
             'grault': {
                 'baz': 3,
@@ -350,7 +356,9 @@ class FlatterDictTests(FlatDictTests):
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
             'tuple': ('F', 0, 0),
-            'abc': {'def': True}
+            'abc': {
+                'def': True
+            }
         },
         'garply': {
             'foo': 0,
@@ -372,7 +380,8 @@ class FlatterDictTests(FlatDictTests):
             'bar': {
                 'baz': 0,
                 'qux': 1,
-                'corge': 2
+                'corge': 2,
+                'list': [-1, -2, -3]
             },
             'grault': {
                 'baz': 3,
@@ -382,7 +391,9 @@ class FlatterDictTests(FlatDictTests):
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
             'tuple': ('F', 0, 0),
-            'abc': {'def': True}
+            'abc': {
+                'def': True
+            }
         },
         'garply': {
             'foo': 0,
