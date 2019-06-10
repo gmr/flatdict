@@ -15,7 +15,7 @@ stages:
 
 install:
 - python setup.py develop
-- pip install coverage mock nose
+- pip install -r testing-requirements.txt
 script: nosetests
 after_success:
 - ci/upload-coverage.sh
@@ -31,12 +31,12 @@ jobs:
   - python: pypy3
   - stage: coverage
     if: repo = gmr/flatdict
-    python: 3.7
+    python: "3.7"
     services: []
     script: ci/combine-coverage.sh
   - stage: deploy
     if: repo = gmr/flatdict
-    python: 3.7
+    python: "3.7"
     services: []
     install: true
     before_script: []
