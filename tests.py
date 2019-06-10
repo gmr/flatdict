@@ -58,7 +58,7 @@ class FlatDictTests(unittest.TestCase):
             },
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
-            'tuple': tuple(['F', 0, 0])
+            'tuple': ('F', 0, 0)
         },
         'garply': {
             'foo': 0,
@@ -89,7 +89,7 @@ class FlatDictTests(unittest.TestCase):
             },
             'list': ['F', 'O', 'O'],
             'set': {10, 20, 30},
-            'tuple': tuple(['F', 0, 0])
+            'tuple': ('F', 0, 0)
         },
         'garply': {
             'foo': 0,
@@ -112,7 +112,7 @@ class FlatDictTests(unittest.TestCase):
         self.value = self.TEST_CLASS(self.VALUES, ':')
 
     def test_contains_true(self):
-        self.assertTrue(all([k in self.value for k in self.KEYS]))
+        self.assertTrue(all(k in self.value for k in self.KEYS))
 
     def test_contains_false(self):
         self.assertNotIn(str(uuid.uuid4()), self.value['foo'])
@@ -152,7 +152,7 @@ class FlatDictTests(unittest.TestCase):
 
     def test_missing_key_on_get(self):
         with self.assertRaises(KeyError):
-            _x = self.value[str(uuid.uuid4())]
+            self.assertIsNotNone(self.value[str(uuid.uuid4())])
 
     def test_del_all_for_prefix(self):
         for key in [k for k in self.KEYS if k.startswith('garply')]:
@@ -161,7 +161,7 @@ class FlatDictTests(unittest.TestCase):
 
     def test_iter_keys(self):
         self.assertListEqual(sorted(self.KEYS),
-                             sorted([k for k in iter(self.value)]))
+                             sorted(k for k in iter(self.value)))
 
     def test_repr_value(self):
         value = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
@@ -212,7 +212,7 @@ class FlatDictTests(unittest.TestCase):
 
     def test_eq_value_error(self):
         with self.assertRaises(TypeError):
-            a = self.value == 123
+            self.assertTrue(self.value == 123)
 
     def test_iter_items(self):
         items = [(k, v) for k, v in self.value.iteritems()]
@@ -429,7 +429,7 @@ class FlatterDictTests(FlatDictTests):
         'double_nest': [
             [1, 2],
             (3, 4),
-            set([5, 6]),
+            {5, 6},
         ]
     }
 
@@ -481,7 +481,7 @@ class FlatterDictTests(FlatDictTests):
         'double_nest': [
             [1, 2],
             (3, 4),
-            set([5, 6]),
+            {5, 6},
         ]
     }
 

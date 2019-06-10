@@ -178,7 +178,7 @@ class FlatDict(collections.MutableMapping):
                 if self._has_delimiter(ck):
                     ck = ck.split(self._delimiter, 1)[0]
                 if isinstance(self._values[pk], FlatDict) and pk not in out:
-                    out[pk] = dict()
+                    out[pk] = {}
                 if isinstance(self._values[pk][ck], FlatDict):
                     out[pk][ck] = self._values[pk][ck].as_dict()
                 else:
@@ -376,13 +376,13 @@ class FlatterDict(FlatDict):
      the implementation added in v1.2 of FlatDict.
 
     """
-    _COERCE = (list, tuple, set, dict, FlatDict)
-    _ARRAYS = (list, set, tuple)
+    _COERCE = list, tuple, set, dict, FlatDict
+    _ARRAYS = list, set, tuple
 
     def __init__(self, value=None, delimiter=':', dict_class=dict):
         self.original_type = type(value)
         if self.original_type in self._ARRAYS:
-            value = dict([(str(i), v) for i, v in enumerate(value)])
+            value = {str(i): v for i, v in enumerate(value)}
         super(FlatterDict, self).__init__(value, delimiter, dict_class)
 
     def __setitem__(self, key, value):
@@ -427,7 +427,7 @@ class FlatterDict(FlatDict):
         :rtype: dict
 
         """
-        out = dict({})
+        out = {}
         for key in self.keys():
             if self._has_delimiter(key):
                 pk, ck = key.split(self._delimiter, 1)
@@ -461,7 +461,7 @@ class FlatterDict(FlatDict):
             subset = self._values[pk][ck]
         # Check if keys has delimiter, which implies deeply nested dict
         keys = subset.keys()
-        if any([self._has_delimiter(k) for k in keys]):
+        if any(self._has_delimiter(k) for k in keys):
             out = []
             split_keys = [k.split(self._delimiter)[0] for k in keys]
             for k in sorted(set(split_keys)):
@@ -473,6 +473,5 @@ class FlatterDict(FlatDict):
                     out.append(set(self._child_as_list(pk, k)))
                 elif subset[k].original_type == dict:
                     out.append(subset[k].as_dict())
-        else:
-            out = [subset[k] for k in sorted(keys, key=lambda x: int(x))]
-        return out
+            return out
+        return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
