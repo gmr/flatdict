@@ -499,6 +499,13 @@ class FlatterDictTests(FlatDictTests):
         d.update(new_vals)
         self.assertEqual(d.as_dict(), new_vals)
 
+    def test_set_nest_dict(self):
+        vals = {'dicts': [{'a': 1, 'b': 2}, {'c': 3, 'd': 4}]}
+        d = self.TEST_CLASS(vals)
+        vals['dicts'][0]['a'] = -1
+        d['dicts:0:a'] = -1
+        self.assertEqual(d.as_dict(), vals)
+
     def test_update_nest_dict(self):
         vals = {'dicts': [{'a': 1, 'b': 2}, {'c': 3, 'd': 4}]}
         d = self.TEST_CLASS(vals)
