@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.2.0 (2019-06-10)
+- FIXED List Flattening does not return list when an odd number of depth in the dictionary (#27 [mileslucas](https://github.com/mileslucas))
+- Flake8 cleanup/improvements
+- Distribution/packaging updates to put metadata into setup.cfg
+
 ## 3.1.0 (2018-10-30)
 - FIXED `FlatDict` behavior with empty iteratable values
 - CHANGED behavior when casting to str or repr (#23)
