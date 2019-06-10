@@ -439,15 +439,6 @@ class FlatterDict(FlatDict):
                         out[pk] = set(self._child_as_list(pk))
                     elif self._values[pk].original_type == dict:
                         out[pk] = self._values[pk].as_dict()
-                elif isinstance(self._values[pk][ck], FlatterDict):
-                    if self._values[pk][ck].original_type == tuple:
-                        out[pk][ck] = tuple(self._child_as_list(pk, ck))
-                    elif self._values[pk][ck].original_type == list:
-                        out[pk][ck] = self._child_as_list(pk, ck)
-                    elif self._values[pk][ck].original_type == set:
-                        out[pk][ck] = set(self._child_as_list(pk, ck))
-                    elif self._values[pk][ck].original_type == dict:
-                        out[pk][ck] = self._values[pk][ck].as_dict()
             else:
                 out[key] = self._values[key]
         return out
@@ -465,4 +456,20 @@ class FlatterDict(FlatDict):
             subset = self._values[pk]
         else:
             subset = self._values[pk][ck]
-        return [subset[k] for k in sorted(subset.keys(), key=lambda x: int(x))]
+        # Check if keys has delimiter, which implies deeply nested dict
+        keys = subset.keys()
+        if any([self._has_delimiter(k) for k in keys]):
+            out = []
+            split_keys = [k.split(self._delimiter)[0] for k in keys]
+            for k in sorted(set(split_keys)):
+                if subset[k].original_type == tuple:
+                    out.append(tuple(self._child_as_list(pk, k)))
+                elif subset[k].original_type == list:
+                    out.append(self._child_as_list(pk, k))
+                elif subset[k].original_type == set:
+                    out.append(set(self._child_as_list(pk, k)))
+                elif subset[k].original_type == dict:
+                    out.append(subset[k].as_dict())
+        else:
+            out = [subset[k] for k in sorted(keys, key=lambda x: int(x))]
+        return out
