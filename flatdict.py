@@ -405,11 +405,14 @@ class FlatterDict(FlatDict):
             if getattr(self._values[pk], 'original_type',
                        None) in self._ARRAYS:
                 try:
-                    int(ck)
+                    k, cck = ck.split(self._delimiter, 1)
+                    int(k)
                 except ValueError:
                     raise TypeError(
                         'Assignment to invalid type for key {}{}{}'.format(
                             pk, self._delimiter, ck))
+                self._values[pk][k][cck] = value
+                return
             elif not isinstance(self._values[pk], FlatterDict):
                 raise TypeError(
                     'Assignment to invalid type for key {}'.format(pk))
