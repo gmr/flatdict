@@ -327,17 +327,58 @@ class FlatterDictTests(FlatDictTests):
         'xyzzy': 'plugh',
         'thud': 5,
         'waldo:fred': 6,
-        'waldo:wanda': 7
+        'waldo:wanda': 7,
+        'neighbors:0:left': 'john',
+        'neighbors:0:right': 'michelle',
+        'neighbors:1:left': 'steven',
+        'neighbors:1:right': 'wynona',
+        'double_nest:0:0': 1,
+        'double_nest:0:1': 2,
+        'double_nest:1:0': 3,
+        'double_nest:1:1': 4,
+        'double_nest:2:0': 5,
+        'double_nest:2:1': 6,
     }
 
     KEYS = sorted([
-        'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:bar:list:0',
-        'foo:bar:list:1', 'foo:bar:list:2', 'foo:grault:baz', 'foo:grault:qux',
-        'foo:grault:corge', 'foo:list:0', 'foo:list:1', 'foo:list:2',
-        'foo:set:0', 'foo:set:1', 'foo:set:2', 'foo:tuple:0', 'foo:tuple:1',
-        'foo:tuple:2', 'garply:foo', 'garply:bar', 'garply:baz',
-        'garply:qux:corge', 'fred', 'thud', 'xyzzy', 'waldo:fred',
-        'waldo:wanda', 'foo:abc:def'
+        'foo:bar:baz',
+        'foo:bar:qux',
+        'foo:bar:corge',
+        'foo:bar:list:0',
+        'foo:bar:list:1',
+        'foo:bar:list:2',
+        'foo:grault:baz',
+        'foo:grault:qux',
+        'foo:grault:corge',
+        'foo:list:0',
+        'foo:list:1',
+        'foo:list:2',
+        'foo:set:0',
+        'foo:set:1',
+        'foo:set:2',
+        'foo:tuple:0',
+        'foo:tuple:1',
+        'foo:tuple:2',
+        'garply:foo',
+        'garply:bar',
+        'garply:baz',
+        'garply:qux:corge',
+        'fred',
+        'thud',
+        'xyzzy',
+        'waldo:fred',
+        'waldo:wanda',
+        'foo:abc:def',
+        'neighbors:0:left',
+        'neighbors:0:right',
+        'neighbors:1:left',
+        'neighbors:1:right',
+        'double_nest:0:0',
+        'double_nest:0:1',
+        'double_nest:1:0',
+        'double_nest:1:1',
+        'double_nest:2:0',
+        'double_nest:2:1',
     ])
 
     VALUES = {
@@ -368,11 +409,28 @@ class FlatterDictTests(FlatDictTests):
                 'corge': 3
             }
         },
-        'fred': 4,
-        'xyzzy': 'plugh',
-        'thud': 5,
-        'waldo:fred': 6,
-        'waldo:wanda': 7
+        'fred':
+        4,
+        'xyzzy':
+        'plugh',
+        'thud':
+        5,
+        'waldo:fred':
+        6,
+        'waldo:wanda':
+        7,
+        'neighbors': [{
+            'left': 'john',
+            'right': 'michelle'
+        }, {
+            'left': 'steven',
+            'right': 'wynona'
+        }],
+        'double_nest': [
+            [1, 2],
+            (3, 4),
+            set([5, 6]),
+        ]
     }
 
     AS_DICT = {
@@ -403,11 +461,26 @@ class FlatterDictTests(FlatDictTests):
                 'corge': 3
             }
         },
-        'fred': 4,
-        'xyzzy': 'plugh',
-        'thud': 5,
+        'fred':
+        4,
+        'xyzzy':
+        'plugh',
+        'thud':
+        5,
         'waldo': {
             'fred': 6,
             'wanda': 7
-        }
+        },
+        'neighbors': [{
+            'left': 'john',
+            'right': 'michelle'
+        }, {
+            'left': 'steven',
+            'right': 'wynona'
+        }],
+        'double_nest': [
+            [1, 2],
+            (3, 4),
+            set([5, 6]),
+        ]
     }
