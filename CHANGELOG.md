@@ -2,7 +2,7 @@
 
 ## 3.2.0 (2019-06-10)
 - FIXED List Flattening does not return list when an odd number of depth in the dictionary (#27 [mileslucas](https://github.com/mileslucas))
-- CHANGED FlatterDict to allow for deeply nested dicts and lists (#21, #28 [mileslucas](https://github.com/mileslucas))
+- CHANGED FlatterDict to allow for deeply nested dicts and lists when invoking `FlatterDict.as_dict()` (#28 [mileslucas](https://github.com/mileslucas))
 - Flake8 cleanup/improvements
 - Distribution/packaging updates to put metadata into setup.cfg
 
