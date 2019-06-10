@@ -15,7 +15,7 @@ stages:
 
 install:
 - python setup.py develop
-- pip install -r testing-requirements.txt
+- pip install -r test-requirements.txt
 script: ci/test.sh
 after_success:
 - ci/upload-coverage.sh
