@@ -16,7 +16,7 @@ stages:
 install:
 - python setup.py develop
 - pip install -r testing-requirements.txt
-script: nosetests
+script: ci/test.sh
 after_success:
 - ci/upload-coverage.sh
 
