@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 import collections
 
-__version__ = '3.1.0'
+__version__ = '3.1.1'
 
 NO_DEFAULT = object()
 
@@ -130,8 +130,8 @@ class FlatDict(collections.MutableMapping):
         :rtype: str
 
         """
-        return '<{} id={} {}>"'.format(
-            self.__class__.__name__, id(self), str(self))
+        return '<{} id={} {}>"'.format(self.__class__.__name__, id(self),
+                                       str(self))
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -402,8 +402,8 @@ class FlatterDict(FlatDict):
             if pk not in self._values:
                 self._values[pk] = self.__class__({ck: value}, self._delimiter)
                 return
-            if getattr(self._values[pk],
-                       'original_type', None) in self._ARRAYS:
+            if getattr(self._values[pk], 'original_type',
+                       None) in self._ARRAYS:
                 try:
                     int(ck)
                 except ValueError:
@@ -431,8 +431,15 @@ class FlatterDict(FlatDict):
                 if self._has_delimiter(ck):
                     ck = ck.split(self._delimiter, 1)[0]
                 if isinstance(self._values[pk], FlatterDict) and pk not in out:
-                    out[pk] = dict()
-                if isinstance(self._values[pk][ck], FlatterDict):
+                    if self._values[pk].original_type == tuple:
+                        out[pk] = tuple(self._child_as_list(pk))
+                    elif self._values[pk].original_type == list:
+                        out[pk] = self._child_as_list(pk)
+                    elif self._values[pk].original_type == set:
+                        out[pk] = set(self._child_as_list(pk))
+                    elif self._values[pk].original_type == dict:
+                        out[pk] = self._values[pk].as_dict()
+                elif isinstance(self._values[pk][ck], FlatterDict):
                     if self._values[pk][ck].original_type == tuple:
                         out[pk][ck] = tuple(self._child_as_list(pk, ck))
                     elif self._values[pk][ck].original_type == list:
@@ -441,21 +448,21 @@ class FlatterDict(FlatDict):
                         out[pk][ck] = set(self._child_as_list(pk, ck))
                     elif self._values[pk][ck].original_type == dict:
                         out[pk][ck] = self._values[pk][ck].as_dict()
-                else:
-                    out[pk][ck] = self._values[pk][ck]
             else:
                 out[key] = self._values[key]
         return out
 
-    def _child_as_list(self, pk, ck):
+    def _child_as_list(self, pk, ck=None):
         """Returns a list of values from the child FlatterDict instance
         with string based integer keys.
 
         :param str pk: The parent key
-        :param str ck: The child key
+        :param str ck: The child key, optional
         :rtype: list
 
         """
-        return [self._values[pk][ck][k]
-                for k in sorted(self._values[pk][ck].keys(),
-                                key=lambda x: int(x))]
+        if ck is None:
+            subset = self._values[pk]
+        else:
+            subset = self._values[pk][ck]
+        return [subset[k] for k in sorted(subset.keys(), key=lambda x: int(x))]
