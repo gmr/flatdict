@@ -178,7 +178,7 @@ class FlatDict(collections.MutableMapping):
                 if self._has_delimiter(ck):
                     ck = ck.split(self._delimiter, 1)[0]
                 if isinstance(self._values[pk], FlatDict) and pk not in out:
-                    out[pk] = dict()
+                    out[pk] = {}
                 if isinstance(self._values[pk][ck], FlatDict):
                     out[pk][ck] = self._values[pk][ck].as_dict()
                 else:
@@ -376,13 +376,13 @@ class FlatterDict(FlatDict):
      the implementation added in v1.2 of FlatDict.
 
     """
-    _COERCE = (list, tuple, set, dict, FlatDict)
-    _ARRAYS = (list, set, tuple)
+    _COERCE = list, tuple, set, dict, FlatDict
+    _ARRAYS = list, set, tuple
 
     def __init__(self, value=None, delimiter=':'):
         self.original_type = type(value)
         if self.original_type in self._ARRAYS:
-            value = dict([(str(i), v) for i, v in enumerate(value)])
+            value = {str(i): v for i, v in enumerate(value)}
         super(FlatterDict, self).__init__(value, delimiter)
 
     def __setitem__(self, key, value):
@@ -424,7 +424,7 @@ class FlatterDict(FlatDict):
         :rtype: dict
 
         """
-        out = dict({})
+        out = {}
         for key in self.keys():
             if self._has_delimiter(key):
                 pk, ck = key.split(self._delimiter, 1)
