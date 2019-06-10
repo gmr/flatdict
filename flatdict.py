@@ -458,7 +458,7 @@ class FlatterDict(FlatDict):
             subset = self._values[pk][ck]
         # Check if keys has delimiter, which implies deeply nested dict
         keys = subset.keys()
-        if any([self._has_delimiter(k) for k in keys]):
+        if any(self._has_delimiter(k) for k in keys):
             out = []
             split_keys = [k.split(self._delimiter)[0] for k in keys]
             for k in sorted(set(split_keys)):
@@ -470,6 +470,5 @@ class FlatterDict(FlatDict):
                     out.append(set(self._child_as_list(pk, k)))
                 elif subset[k].original_type == dict:
                     out.append(subset[k].as_dict())
-        else:
-            out = [subset[k] for k in sorted(keys, key=lambda x: int(x))]
-        return out
+            return out
+        return [subset[k] for k in sorted(keys, key=lambda x: int(x))]

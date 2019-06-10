@@ -429,7 +429,7 @@ class FlatterDictTests(FlatDictTests):
         'double_nest': [
             [1, 2],
             (3, 4),
-            set([5, 6]),
+            {5, 6},
         ]
     }
 
@@ -481,6 +481,6 @@ class FlatterDictTests(FlatDictTests):
         'double_nest': [
             [1, 2],
             (3, 4),
-            set([5, 6]),
+            {5, 6},
         ]
     }
