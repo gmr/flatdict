@@ -1,5 +1,11 @@
-sudo: false
 language: python
+dist: xenial
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
 env:
   global:
    - PATH=$HOME/.local/bin:$PATH
@@ -15,41 +21,28 @@ stages:
 
 install:
 - python setup.py develop
-- pip install awscli mock nose coverage
-
+- pip install coverage mock nose
 script: nosetests
-
 after_success:
-- aws s3 cp .coverage "s3://com-gavinroy-travis/flatdict/$TRAVIS_BUILD_NUMBER/.coverage.${TRAVIS_PYTHON_VERSION}"
+- ci/upload-coverage.sh
 
 jobs:
   include:
-  - python: 2.7
-  - python: 3.4
-  - python: 3.5
-  - python: 3.6
-  - python: "3.7-dev"
+  - python: "2.7"
+  - python: "3.4"
+  - python: "3.5"
+  - python: "3.6"
+  - python: "3.7"
   - python: pypy
   - python: pypy3
   - stage: coverage
     if: repo = gmr/flatdict
-    python: 3.6
+    python: 3.7
     services: []
-    install:
-    - pip install awscli coverage codecov
-    before_script: []
-    script:
-    - mkdir coverage
-    - aws s3 cp --recursive s3://com-gavinroy-travis/flatdict/$TRAVIS_BUILD_NUMBER/ coverage
-    - cd coverage
-    - coverage combine
-    - cd ..
-    - mv coverage/.coverage .
-    - coverage report
-    after_success: codecov
+    script: ci/combine-coverage.sh
   - stage: deploy
     if: repo = gmr/flatdict
-    python: 3.6
+    python: 3.7
     services: []
     install: true
     before_script: []
