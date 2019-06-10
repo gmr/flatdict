@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
-if [[ -z "${AWS_ACCESS_KEY_ID}" ]]
+if [ -z "${AWS_ACCESS_KEY_ID}" ]
 then
     echo "AWS_ACCESS_KEY_ID is not set, exiting"
     exit 0
