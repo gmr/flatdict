@@ -440,7 +440,10 @@ class FlatterDict(FlatDict):
                     elif self._values[pk].original_type == dict:
                         out[pk] = self._values[pk].as_dict()
             else:
-                out[key] = self._values[key]
+                if isinstance(self._values[key], FlatterDict):
+                    out[key] = self._values[key].original_type()
+                else:
+                    out[key] = self._values[key]
         return out
 
     def _child_as_list(self, pk, ck=None):
