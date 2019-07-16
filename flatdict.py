@@ -315,7 +315,7 @@ class FlatDict(collections.MutableMapping):
         :rtype: mixed
 
         """
-        if key not in self or not self.__getitem__(key):
+        if key not in self:
             self.__setitem__(key, default)
         return self.__getitem__(key)
 
