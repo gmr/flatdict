@@ -262,6 +262,11 @@ class FlatDictTests(unittest.TestCase):
         self.value.setdefault('foo:bar:qux', 9999)
         self.assertEqual(self.value['foo:bar:qux'], 1)
 
+    def test_set_default_already_set_false_or_none(self):
+        value = self.TEST_CLASS({'foo': False})
+        value.setdefault('foo', None)
+        self.assertEqual(value['foo'], False)
+
     def test_set_delimiter(self):
         self.value.set_delimiter('-')
         self.assertEqual([k.replace(':', '-') for k in self.KEYS],
