@@ -1,23 +1,34 @@
 # Changelog
 
+## 3.3.0 (2019-07-17)
+
+- FIXED FlatDict.setdefault() to match dict behavior (#32 [abmyii](https://github.com/abmyii))
+- FIXED empty nested Flatterdict (#30 [wsantos](https://github.com/wsantos))
+- CHANGED functionality to allow setting and updating nests within iterables (#29 [mileslucas](https://github.com/mileslucas))
+
 ## 3.2.1 (2019-06-10)
+
 - FIXED docs generation for readthedocs.io
 
 ## 3.2.0 (2019-06-10)
+
 - FIXED List Flattening does not return list when an odd number of depth in the dictionary (#27 [mileslucas](https://github.com/mileslucas))
 - CHANGED FlatterDict to allow for deeply nested dicts and lists when invoking `FlatterDict.as_dict()` (#28 [mileslucas](https://github.com/mileslucas))
 - Flake8 cleanup/improvements
 - Distribution/packaging updates to put metadata into setup.cfg
 
 ## 3.1.0 (2018-10-30)
+
 - FIXED `FlatDict` behavior with empty iteratable values
 - CHANGED behavior when casting to str or repr (#23)
 
 ## 3.0.1 (2018-07-01)
+
 - Add 3.7 to Trove Classifiers
 - Add Python 2.7 unicode string compatibility (#22 [nvllsvm](https://github.com/nvllsvm))
 
 ## 3.0.0 (2018-03-06)
+
 - CHANGED `FlatDict.as_dict` to return the nested data structure based upon delimiters, coercing `FlatDict` objects to `dict`.
 - CHANGED `FlatDict` to extend `collections.MutableMapping` instead of dict
 - CHANGED `dict(FlatDict())` to return a shallow `dict` instance with the delimited keys as strings
@@ -25,9 +36,11 @@
 - FIXED `FlatterDict` behavior to match expectations from pre-2.0 releases.
 
 ## 2.0.1 (2018-01-18)
+
 - FIXED metadata for pypi upload
 
 ## 2.0.0 (2018-01-18)
+
 - Code efficiency refactoring and cleanup
 - Rewrote a majority of the tests, now at 100% coverage
 - ADDED `FlatDict.__eq__` and `FlatDict.__ne__` (#13 - [arm77](https://github.com/arm77))
@@ -39,16 +52,20 @@
 - CHANGED `FlatDict.set_delimiter` to raise a `ValueError` if a key already exists with the delimiter value in it. (#8)
 
 ## 1.2.0 (2015-06-25)
+
 - ADDED Support lists and tuples as well as dicts. (#4 - [alex-hutton](https://github.com/alex-hutton))
 
 ## 1.1.3 (2015-01-04)
+
 - ADDED Python wheel support
 
 ## 1.1.2 (2013-10-09)
+
 - Documentation and CI updates
 - CHANGED use of `dict()` to a dict literal `{}`
 
 ## 1.1.1 (2012-08-17)
+
 - ADDED `FlatDict.as_dict()`
 - ADDED Python 3 support
 - ADDED `FlatDict.set_delimiter()`
