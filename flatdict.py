@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 import collections
 
-__version__ = '3.2.1'
+__version__ = '3.2.2'
 
 NO_DEFAULT = object()
 
@@ -440,7 +440,10 @@ class FlatterDict(FlatDict):
                     elif self._values[pk].original_type == dict:
                         out[pk] = self._values[pk].as_dict()
             else:
-                out[key] = self._values[key]
+                if isinstance(self._values[key], FlatterDict):
+                    out[key] = self._values[key].original_type()
+                else:
+                    out[key] = self._values[key]
         return out
 
     def _child_as_list(self, pk, ck=None):

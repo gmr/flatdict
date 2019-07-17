@@ -23,8 +23,11 @@ class FlatDictTests(unittest.TestCase):
         'foo:grault:qux': 4,
         'foo:grault:corge': 5,
         'foo:list': ['F', 'O', 'O'],
+        'foo:empty_list': [],
         'foo:set': {10, 20, 30},
+        'foo:empty_set': set(),
         'foo:tuple': ('F', 0, 0),
+        'foo:empty_tuple': (),
         'garply:foo': 0,
         'garply:bar': 1,
         'garply:baz': 2,
@@ -38,10 +41,10 @@ class FlatDictTests(unittest.TestCase):
 
     KEYS = sorted([
         'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:grault:baz',
-        'foo:grault:qux', 'foo:grault:corge', 'foo:list', 'foo:set',
-        'foo:tuple', 'garply:foo', 'garply:bar', 'garply:baz',
-        'garply:qux:corge', 'fred', 'thud', 'xyzzy', 'waldo:fred',
-        'waldo:wanda'
+        'foo:grault:qux', 'foo:grault:corge', 'foo:list', 'foo:empty_list',
+        'foo:set', 'foo:empty_set', 'foo:tuple', 'foo:empty_tuple',
+        'garply:foo', 'garply:bar', 'garply:baz', 'garply:qux:corge', 'fred',
+        'thud', 'xyzzy', 'waldo:fred', 'waldo:wanda'
     ])
 
     VALUES = {
@@ -57,8 +60,12 @@ class FlatDictTests(unittest.TestCase):
                 'corge': 5
             },
             'list': ['F', 'O', 'O'],
+            'empty_list': [],
             'set': {10, 20, 30},
-            'tuple': ('F', 0, 0)
+            'empty_set': set(),
+            'tuple': ('F', 0, 0),
+            'empty_tuple': ()
+
         },
         'garply': {
             'foo': 0,
@@ -88,8 +95,11 @@ class FlatDictTests(unittest.TestCase):
                 'corge': 5
             },
             'list': ['F', 'O', 'O'],
+            'empty_list': [],
             'set': {10, 20, 30},
-            'tuple': ('F', 0, 0)
+            'empty_set': set(),
+            'tuple': ('F', 0, 0),
+            'empty_tuple': (),
         },
         'garply': {
             'foo': 0,
