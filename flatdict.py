@@ -24,9 +24,9 @@ class FlatDict(collections.MutableMapping):
     """
     _COERCE = dict
 
-    def __init__(self, value=None, delimiter=':'):
+    def __init__(self, value=None, delimiter=':', dict_class=dict):
         super(FlatDict, self).__init__()
-        self._values = {}
+        self._values = dict_class()
         self._delimiter = delimiter
         self.update(value)
 
@@ -379,11 +379,11 @@ class FlatterDict(FlatDict):
     _COERCE = list, tuple, set, dict, FlatDict
     _ARRAYS = list, set, tuple
 
-    def __init__(self, value=None, delimiter=':'):
+    def __init__(self, value=None, delimiter=':', dict_class=dict):
         self.original_type = type(value)
         if self.original_type in self._ARRAYS:
             value = {str(i): v for i, v in enumerate(value)}
-        super(FlatterDict, self).__init__(value, delimiter)
+        super(FlatterDict, self).__init__(value, delimiter, dict_class)
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -405,11 +405,14 @@ class FlatterDict(FlatDict):
             if getattr(self._values[pk], 'original_type',
                        None) in self._ARRAYS:
                 try:
-                    int(ck)
+                    k, cck = ck.split(self._delimiter, 1)
+                    int(k)
                 except ValueError:
                     raise TypeError(
                         'Assignment to invalid type for key {}{}{}'.format(
                             pk, self._delimiter, ck))
+                self._values[pk][k][cck] = value
+                return
             elif not isinstance(self._values[pk], FlatterDict):
                 raise TypeError(
                     'Assignment to invalid type for key {}'.format(pk))
