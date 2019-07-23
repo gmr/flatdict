@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 import collections
 
-__version__ = '3.3.0'
+__version__ = '3.3.1'
 
 NO_DEFAULT = object()
 
@@ -281,13 +281,23 @@ class FlatDict(collections.MutableMapping):
 
         """
         keys = []
+
         for key, value in self._values.items():
             if isinstance(value, (FlatDict, dict)):
                 nested = [self._delimiter.join([key, k]) for k in value.keys()]
                 keys += nested if nested else [key]
             else:
                 keys.append(key)
-        return sorted(keys)
+
+        return [
+            self._delimiter.join(map(str, item))
+            for item in sorted(
+                [
+                    int(s_key) if s_key.isdigit() else s_key
+                    for s_key in key.split(self._delimiter)
+                ] for key in keys
+            )
+        ]
 
     def pop(self, key, default=NO_DEFAULT):
         """If key is in the flat dictionary, remove it and return its value,
@@ -467,7 +477,7 @@ class FlatterDict(FlatDict):
         if any(self._has_delimiter(k) for k in keys):
             out = []
             split_keys = [k.split(self._delimiter)[0] for k in keys]
-            for k in sorted(set(split_keys)):
+            for k in sorted(set(split_keys), key=lambda x: int(x)):
                 if subset[k].original_type == tuple:
                     out.append(tuple(self._child_as_list(pk, k)))
                 elif subset[k].original_type == list:
