@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.0 (2019-07-24)
+
+- FIXED sort order with regard to a nested list of dictionaries (#33 [wsantos](https://github.com/wsantos))
+
 ## 3.3.0 (2019-07-17)
 
 - FIXED FlatDict.setdefault() to match dict behavior (#32 [abmyii](https://github.com/abmyii))
