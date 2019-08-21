@@ -53,6 +53,18 @@ Installation
 
     $ pip install flatdict
 
+Versioning
+----------
+
+This package attempts to use semantic versioning. API changes are indicated
+by the major version, non-breaking improvements by the minor, and bug fixes
+in the revision.
+
+It is recommended that you pin your targets to greater or equal to the current
+version and less than the next major version.
+
+v4 will be released in 2020 and it will drop all support for Python 2.
+
 .. _example:
 
 Example Use
@@ -105,8 +117,8 @@ Example Use
 
 .. _docs:
 
-Class Documentation
--------------------
+API Documentation
+-----------------
 
 .. automodule:: flatdict
     :members:
