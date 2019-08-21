@@ -70,7 +70,7 @@ v4 will be released in 2020 and it will drop all support for Python 2.
 Example Use
 -----------
 
-**:py:class:`flatdict.FlatDict`:**
+:py:class:`flatdict.FlatDict`
 
 .. code-block:: python
 
@@ -105,7 +105,7 @@ Example Use
 
     print(flat == flat.as_dict())
 
-**:py:class:`flatdict.FlatterDict`:**
+:py:class:`flatdict.FlatterDict`
 
 .. code-block:: python
 
