@@ -1,13 +1,9 @@
-.. FlatDict documentation master file, created by
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 FlatDict
 ========
 |Version| |Status| |Coverage| |License|
 
-**FlatDict** is a Python module for interacting with nested dicts as a single
-level dict with delimited keys. FlatDict supports Python 2.7+ and 3.4+.
+:py:module:`flatdict` is a Python module for interacting with nested dicts as a single
+level dict with delimited keys. `flatdict` supports Python 2.7+ and 3.4+.
 
 Jump to :ref:`installation`, :ref:`example`, or :ref:`docs`.
 
@@ -15,40 +11,38 @@ Jump to :ref:`installation`, :ref:`example`, or :ref:`docs`.
 
 .. code-block:: python
 
-    foo = {'foo': {'bar': 'baz', 'qux': 'corge'}}
+    value = flatdict.FlatDict({'foo': {'bar': 'baz', 'qux': 'corge'}})
 
-*is represented as:*
-
-.. code-block:: python
-
-    {'foo:bar': 'baz',
-     'foo:qux': 'corge'}
-
-*And can still be accessed as:*
+*can be accessed as:*
 
 .. code-block:: python
 
-    foo['foo']['bar']
+    value == {'foo:bar': 'baz', 'foo:qux': 'corge'}
 
-*and*
+*values can be accessed as:*
 
 .. code-block:: python
 
-    foo['foo:bar']
+    print(foo['foo:bar'])
 
-Additionally, lists and tuples are also converted into dicts using enumerate().
+    # or
+
+    print(foo['foo']['bar'])
+
+Additionally, lists and tuples are also converted into dicts using enumerate(),
+using the :py:class:`~flatdict.FlatterDict` class.
 
 *For example:*
 
 .. code-block:: python
 
-    d = {'list': ['a', 'b', 'c',]}
+    value = flatdict.FlatterDict({'list': ['a', 'b', 'c']})
 
-*Will be flattened as follows:*
+*will be flattened as follows:*
 
 .. code-block:: python
 
-    flat = {'list:0': 'a', 'list:1': 'b', 'list:2': 'c'}
+    value == {'list:0': 'a', 'list:1': 'b', 'list:2': 'c'}
 
 .. _installation:
 
@@ -64,21 +58,22 @@ Installation
 Example Use
 -----------
 
+**:py:class:`flatdict.FlatDict`:**
+
 .. code-block:: python
 
     import pprint
 
     import flatdict
 
-    values = {'foo': {'bar': {'baz': 0,
-                              'qux': 1,
-                              'corge': 2},
-                      'grault': {'baz': 3,
-                                 'qux': 4,
-                                 'corge': 5}},
-              'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}}}
-
-    flat = flatdict.FlatDict(values)
+    flat = flatdict.FlatDict(
+        {'foo': {'bar': {'baz': 0,
+                                'qux': 1,
+                                'corge': 2},
+                        'grault': {'baz': 3,
+                                    'qux': 4,
+                                    'corge': 5}},
+                'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}}})
 
     print(flat['foo:bar:baz'])
 
@@ -97,6 +92,16 @@ Example Use
     pprint.pprint(dict(flat))
 
     print(flat == flat.as_dict())
+
+**:py:class:`flatdict.FlatterDict`:**
+
+.. code-block:: python
+
+    import flatdict
+
+    value = flatdict.FlatterDict({'list': ['a', 'b', 'c']})
+    for key, value in value.items():
+        print(key, value)
 
 .. _docs:
 
