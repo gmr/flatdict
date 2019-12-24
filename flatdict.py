@@ -273,7 +273,7 @@ class FlatDict(collections.MutableMapping):
         for value in self.values():
             yield value
 
-    def keys(self):
+    def keys(self, sort=False):
         """Return a copy of the flat dictionary's list of keys.
         See the note for :meth:`flatdict.FlatDict.items`.
 
@@ -291,7 +291,7 @@ class FlatDict(collections.MutableMapping):
 
         return [
             self._delimiter.join(map(str, item))
-            for item in sorted(
+            for item in (sorted if sort else tuple)(
                 [
                     int(s_key) if s_key.isdigit() else s_key
                     for s_key in key.split(self._delimiter)
