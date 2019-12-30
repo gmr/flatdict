@@ -190,7 +190,7 @@ class FlatDictTests(unittest.TestCase):
             self.assertIn("'foo': 1", str(val))
             self.assertIn("'baz:qux': 'corgie'", str(val))
         else:
-            self.assertEqual("{'baz:qux': 'corgie', 'foo': 1}", str(val))
+            self.assertEqual("{'foo': 1, 'baz:qux': 'corgie'}", str(val))
 
     def test_incorrect_assignment_raises(self):
         value = self.TEST_CLASS({'foo': ['bar'], 'qux': 1})
