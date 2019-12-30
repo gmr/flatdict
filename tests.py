@@ -147,7 +147,11 @@ class FlatDictTests(unittest.TestCase):
             self.assertNotIn(key, self.value)
 
     def test_as_dict(self):
-        self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
+        if sys.version_info <= (3, 5):
+            self.assertFalse(set(
+                self.value.as_dict().items() ^ self.AS_DICT.items()))
+        else:
+            self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
 
     def test_cast_to_dict(self):
         value = dict(self.value)
@@ -182,7 +186,11 @@ class FlatDictTests(unittest.TestCase):
 
     def test_str_value(self):
         val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
-        self.assertEqual("{'foo': 1, 'baz:qux': 'corgie'}", str(val))
+        if sys.version_info[0:2] <= (3, 5):
+            self.assertIn("'foo': 1", str(val))
+            self.assertIn("'baz:qux': 'corgie'", str(val))
+        else:
+            self.assertEqual("{'baz:qux': 'corgie', 'foo': 1}", str(val))
 
     def test_incorrect_assignment_raises(self):
         value = self.TEST_CLASS({'foo': ['bar'], 'qux': 1})
@@ -226,15 +234,15 @@ class FlatDictTests(unittest.TestCase):
 
     def test_iter_items(self):
         items = [(k, v) for k, v in self.value.iteritems()]
-        self.assertEqual(self.value.items(), items)
+        self.assertCountEqual(self.value.items(), items)
 
     def test_iterkeys(self):
         keys = list(self.value.iterkeys())
-        self.assertEqual(keys, self.KEYS)
+        self.assertCountEqual(keys, self.KEYS)
 
     def test_itervalues(self):
         values = list(self.value.itervalues())
-        self.assertEqual(values, self.value.values())
+        self.assertCountEqual(values, self.value.values())
 
     def test_pop(self):
         self.assertEqual(1, self.value.pop('foo:bar:qux'))
@@ -269,10 +277,12 @@ class FlatDictTests(unittest.TestCase):
 
     def test_set_delimiter(self):
         self.value.set_delimiter('-')
-        self.assertEqual([k.replace(':', '-') for k in self.KEYS],
-                         self.value.keys())
-        self.assertEqual([self.value[k.replace(':', '-')] for k in self.KEYS],
-                         self.value.values())
+        self.assertCountEqual([
+            k.replace(':', '-')
+            for k in self.KEYS], self.value.keys())
+        self.assertCountEqual([
+            self.value[k.replace(':', '-')]
+            for k in self.KEYS], self.value.values())
 
     def test_update(self):
         expectation = self.TEST_CLASS(self.value.as_dict())

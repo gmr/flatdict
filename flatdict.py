@@ -3,6 +3,7 @@ key/value pair mapping of nested dictionaries.
 
 """
 import collections
+import sys
 
 __version__ = '3.5.0'
 
@@ -482,4 +483,8 @@ class FlatterDict(FlatDict):
                 elif subset[k].original_type == dict:
                     out.append(subset[k].as_dict())
             return out
-        return [subset[k] for k in keys]
+
+        if sys.version_info[0:2] <= (3, 5):
+            return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
+        else:
+            return [subset[k] for k in keys]
