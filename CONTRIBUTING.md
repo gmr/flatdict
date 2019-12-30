@@ -4,32 +4,13 @@
 
 Use of virtual environments will allow for isolated installation of testing requirements:
 
-###Python 2
-
 ```bash
-virtualenv -p python2.7 env27
-source env/bin/activate
-pip install -r test-requirements
-```
-
-###Python 3
-
-```bash
-python3 -m venv env
+python -m venv env
 source env/bin/activate
 pip install -r test-requirements
 ```
 
 ## Running Tests
-
-###Python 2
-
-```bash
-source env27/bin/activate
-./ci/test.sh
-```
-
-###Python 3
 
 ```bash
 source env/bin/activate

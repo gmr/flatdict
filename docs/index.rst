@@ -3,7 +3,7 @@ FlatDict
 |Version| |Status| |Coverage| |License|
 
 ``flatdict`` is a Python module for interacting with nested dicts as a single
-level dict with delimited keys. ``flatdict`` supports Python 2.7+ and 3.4+.
+level dict with delimited keys. ``flatdict`` supports Python 3.4+.
 
 Jump to :ref:`installation`, :ref:`example`, or :ref:`docs`.
 
