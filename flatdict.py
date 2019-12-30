@@ -5,15 +5,9 @@ key/value pair mapping of nested dictionaries.
 import collections
 import sys
 
-__version__ = '3.5.0'
+__version__ = '4.0.0'
 
 NO_DEFAULT = object()
-
-# Python 2/3 string compat
-try:
-    basestring
-except NameError:
-    basestring = str
 
 
 class FlatDict(collections.MutableMapping):
@@ -373,7 +367,7 @@ class FlatDict(collections.MutableMapping):
         :rtype: bool
 
         """
-        return isinstance(key, basestring) and self._delimiter in key
+        return isinstance(key, str) and self._delimiter in key
 
 
 class FlatterDict(FlatDict):

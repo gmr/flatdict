@@ -3,7 +3,7 @@
 ## 3.5.0 (2019-12-30)
 
 - FIXED keep order of received dict and it's nested objects
-- Drops python 2 support
+- Drops Python 2 support and Python 3.4
 
 ## 3.4.0 (2019-07-24)
 
