@@ -148,8 +148,8 @@ class FlatDictTests(unittest.TestCase):
 
     def test_as_dict(self):
         if sys.version_info <= (3, 5):
-            self.assertFalse(set(
-                self.value.as_dict().items() ^ self.AS_DICT.items()))
+            self.assertCountEqual(
+                self.value.as_dict().items(), self.AS_DICT.items())
         else:
             self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
 
