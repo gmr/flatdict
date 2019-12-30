@@ -229,11 +229,11 @@ class FlatDictTests(unittest.TestCase):
         self.assertEqual(self.value.items(), items)
 
     def test_iterkeys(self):
-        keys = [k for k in self.value.iterkeys()]
+        keys = list(self.value.iterkeys())
         self.assertEqual(keys, self.KEYS)
 
     def test_itervalues(self):
-        values = [v for v in self.value.itervalues()]
+        values = list(self.value.itervalues())
         self.assertEqual(values, self.value.values())
 
     def test_pop(self):
