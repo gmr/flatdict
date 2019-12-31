@@ -39,13 +39,13 @@ class FlatDictTests(unittest.TestCase):
         'waldo:wanda': 7
     }
 
-    KEYS = sorted([
+    KEYS = [
         'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:grault:baz',
         'foo:grault:qux', 'foo:grault:corge', 'foo:list', 'foo:empty_list',
         'foo:set', 'foo:empty_set', 'foo:tuple', 'foo:empty_tuple',
         'garply:foo', 'garply:bar', 'garply:baz', 'garply:qux:corge', 'fred',
-        'thud', 'xyzzy', 'waldo:fred', 'waldo:wanda'
-    ])
+        'xyzzy', 'thud', 'waldo:fred', 'waldo:wanda'
+    ]
 
     VALUES = {
         'foo': {
@@ -147,7 +147,11 @@ class FlatDictTests(unittest.TestCase):
             self.assertNotIn(key, self.value)
 
     def test_as_dict(self):
-        self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
+        if sys.version_info <= (3, 5):
+            self.assertCountEqual(
+                self.value.as_dict().items(), self.AS_DICT.items())
+        else:
+            self.assertDictEqual(self.value.as_dict(), self.AS_DICT)
 
     def test_cast_to_dict(self):
         value = dict(self.value)
@@ -182,7 +186,11 @@ class FlatDictTests(unittest.TestCase):
 
     def test_str_value(self):
         val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
-        self.assertEqual("{'baz:qux': 'corgie', 'foo': 1}", str(val))
+        if sys.version_info[0:2] <= (3, 5):
+            self.assertIn("'foo': 1", str(val))
+            self.assertIn("'baz:qux': 'corgie'", str(val))
+        else:
+            self.assertEqual("{'foo': 1, 'baz:qux': 'corgie'}", str(val))
 
     def test_incorrect_assignment_raises(self):
         value = self.TEST_CLASS({'foo': ['bar'], 'qux': 1})
@@ -226,15 +234,15 @@ class FlatDictTests(unittest.TestCase):
 
     def test_iter_items(self):
         items = [(k, v) for k, v in self.value.iteritems()]
-        self.assertEqual(self.value.items(), items)
+        self.assertCountEqual(self.value.items(), items)
 
     def test_iterkeys(self):
-        keys = [k for k in self.value.iterkeys()]
-        self.assertEqual(keys, self.KEYS)
+        keys = list(self.value.iterkeys())
+        self.assertCountEqual(keys, self.KEYS)
 
     def test_itervalues(self):
-        values = [v for v in self.value.itervalues()]
-        self.assertEqual(values, self.value.values())
+        values = list(self.value.itervalues())
+        self.assertCountEqual(values, self.value.values())
 
     def test_pop(self):
         self.assertEqual(1, self.value.pop('foo:bar:qux'))
@@ -269,10 +277,12 @@ class FlatDictTests(unittest.TestCase):
 
     def test_set_delimiter(self):
         self.value.set_delimiter('-')
-        self.assertEqual([k.replace(':', '-') for k in self.KEYS],
-                         self.value.keys())
-        self.assertEqual([self.value[k.replace(':', '-')] for k in self.KEYS],
-                         self.value.values())
+        self.assertCountEqual([
+            k.replace(':', '-')
+            for k in self.KEYS], self.value.keys())
+        self.assertCountEqual([
+            self.value[k.replace(':', '-')]
+            for k in self.KEYS], self.value.values())
 
     def test_update(self):
         expectation = self.TEST_CLASS(self.value.as_dict())
@@ -365,22 +375,15 @@ class FlatterDictTests(FlatDictTests):
     }
 
     KEYS = [
-        'double_nest:0:0',
-        'double_nest:0:1',
-        'double_nest:1:0',
-        'double_nest:1:1',
-        'double_nest:2:0',
-        'double_nest:2:1',
-        'foo:abc:def',
         'foo:bar:baz',
+        'foo:bar:qux',
         'foo:bar:corge',
         'foo:bar:list:0',
         'foo:bar:list:1',
         'foo:bar:list:2',
-        'foo:bar:qux',
         'foo:grault:baz',
-        'foo:grault:corge',
         'foo:grault:qux',
+        'foo:grault:corge',
         'foo:list:0',
         'foo:list:1',
         'foo:list:2',
@@ -399,19 +402,26 @@ class FlatterDictTests(FlatDictTests):
         'foo:tuple:0',
         'foo:tuple:1',
         'foo:tuple:2',
-        'fred',
+        'foo:abc:def',
+        'garply:foo',
         'garply:bar',
         'garply:baz',
-        'garply:foo',
         'garply:qux:corge',
+        'fred',
+        'xyzzy',
+        'thud',
+        'waldo:fred',
+        'waldo:wanda',
         'neighbors:0:left',
         'neighbors:0:right',
         'neighbors:1:left',
         'neighbors:1:right',
-        'thud',
-        'waldo:fred',
-        'waldo:wanda',
-        'xyzzy',
+        'double_nest:0:0',
+        'double_nest:0:1',
+        'double_nest:1:0',
+        'double_nest:1:1',
+        'double_nest:2:0',
+        'double_nest:2:1',
     ]
 
     VALUES = {
@@ -442,16 +452,11 @@ class FlatterDictTests(FlatDictTests):
                 'corge': 3
             }
         },
-        'fred':
-        4,
-        'xyzzy':
-        'plugh',
-        'thud':
-        5,
-        'waldo:fred':
-        6,
-        'waldo:wanda':
-        7,
+        'fred': 4,
+        'xyzzy': 'plugh',
+        'thud': 5,
+        'waldo:fred': 6,
+        'waldo:wanda': 7,
         'neighbors': [{
             'left': 'john',
             'right': 'michelle'

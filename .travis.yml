@@ -22,12 +22,10 @@ after_success:
 
 jobs:
   include:
-  - python: "2.7"
-  - python: "3.4"
   - python: "3.5"
   - python: "3.6"
   - python: "3.7"
-  - python: pypy
+  - python: "3.8"
   - python: pypy3
   - stage: coverage
     if: repo = gmr/flatdict
@@ -36,7 +34,7 @@ jobs:
     script: ci/combine-coverage.sh
   - stage: deploy
     if: repo = gmr/flatdict
-    python: "3.7"
+    python: "3.8"
     services: []
     install: true
     before_script: []
