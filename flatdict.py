@@ -478,7 +478,9 @@ class FlatterDict(FlatDict):
                     out.append(subset[k].as_dict())
             return out
 
-        if sys.version_info[0:2] <= (3, 5):
+        # Python prior 3.6 don't guarantee insertion order, remove it after
+        # EOL python 3.5 - 2020-09-13
+        if sys.version_info[0:2] < (3, 6):
             return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
         else:
             return [subset[k] for k in keys]
