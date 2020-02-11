@@ -3,9 +3,9 @@ key/value pair mapping of nested dictionaries.
 
 """
 try:
-  from collections.abc import MutableMapping
+    from collections.abc import MutableMapping
 except ImportError:
-  from collections import MutableMapping
+    from collections import MutableMapping
 import sys
 
 __version__ = '4.0.0'
