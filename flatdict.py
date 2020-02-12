@@ -485,5 +485,5 @@ class FlatterDict(FlatDict):
         # EOL python 3.5 - 2020-09-13
         if sys.version_info[0:2] < (3, 6):
             return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
-        else:
+        else:  # pragma: nocover
             return [subset[k] for k in keys]
