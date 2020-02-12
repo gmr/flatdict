@@ -7,5 +7,3 @@ flake8-import-order
 flake8-quotes
 flake8-rst-docstrings
 flake8-tuple
-mock
-nose

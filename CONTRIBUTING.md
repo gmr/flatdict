@@ -14,7 +14,8 @@ pip install -r test-requirements
 
 ```bash
 source env/bin/activate
-./ci/test.sh
+flake8
+coverage run -m unittest discover -v; coverage report -m
 ```
 
 ## Test Coverage
