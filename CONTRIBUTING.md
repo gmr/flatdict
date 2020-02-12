@@ -7,7 +7,7 @@ Use of virtual environments will allow for isolated installation of testing requ
 ```bash
 python3 -m venv env
 source env/bin/activate
-pip install -r test-requirements
+pip install -r requires/testing.txt
 ```
 
 ## Running Tests
