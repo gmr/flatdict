@@ -273,8 +273,8 @@ class FlatDictTests(unittest.TestCase):
             sorted(k.replace(':', '-') for k in self.KEYS),
             sorted(self.value.keys()))
         self.assertListEqual(
-            sorted(self.value[k.replace(':', '-')] for k in self.KEYS),
-            sorted(self.value.values()))
+            sorted(str(self.value[k.replace(':', '-')]) for k in self.KEYS),
+            sorted(str(v) for v in self.value.values()))
 
     def test_update(self):
         expectation = self.TEST_CLASS(self.value.as_dict())
