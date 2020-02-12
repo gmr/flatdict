@@ -3,7 +3,7 @@ FlatDict
 |Version| |Status| |Coverage| |License|
 
 ``flatdict`` is a Python module for interacting with nested dicts as a single
-level dict with delimited keys. ``flatdict`` supports Python 3.4+.
+level dict with delimited keys. ``flatdict`` supports Python 3.5+.
 
 Jump to :ref:`installation`, :ref:`example`, or :ref:`docs`.
 
@@ -62,8 +62,6 @@ in the revision.
 
 It is recommended that you pin your targets to greater or equal to the current
 version and less than the next major version.
-
-v4 will be released in 2020 and it will drop all support for Python 2.
 
 .. _example:
 
@@ -128,8 +126,9 @@ API Documentation
 .. |Version| image:: https://img.shields.io/pypi/v/flatdict.svg?
    :target: https://pypi.python.org/pypi/flatdict
 
-.. |Status| image:: https://img.shields.io/travis/gmr/flatdict.svg?
-   :target: https://travis-ci.org/gmr/flatdict
+.. |Status| image:: https://github.com/gmr/flatdict/workflows/Testing/badge.svg
+   :target: https://github.com/gmr/flatdict/actions
+   :alt: Build Status
 
 .. |Coverage| image:: https://img.shields.io/codecov/c/github/gmr/flatdict.svg?
    :target: https://codecov.io/github/gmr/flatdict?branch=master
