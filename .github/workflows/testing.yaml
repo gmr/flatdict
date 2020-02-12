@@ -1,0 +1,39 @@
+name: Testing
+on:
+  push:
+    branches: ["*"]
+    paths-ignore:
+      - 'docs/**'
+      - 'setup.*'
+      - '*.md'
+      - '*.rst'
+    tags-ignore: ["*"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.5, 3.6, 3.7, 3.8]
+    container:
+      image: python:${{ matrix.python }}-alpine
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install testing dependencies
+        run: pip3 install -r requires/testing.txt
+
+      - name: Run flake8 tests
+        run: flake8 --output build/flake8.txt --tee
+
+      - name: Run tests
+        run: coverage run -m unittest discover -v
+
+      - name: Output coverage report
+        run: coverage report -m
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v1.0.2
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: build/coverage.xml

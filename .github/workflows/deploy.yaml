@@ -1,0 +1,20 @@
+name: Deployment
+on:
+  push:
+    branches-ignore: ["*"]
+    tags: ["*"]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    container: python:3.8-alpine
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build package
+        run: python3 setup.py sdist
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_PASSWORD }}
