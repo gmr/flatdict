@@ -5,9 +5,7 @@
 Use of virtual environments will allow for isolated installation of testing requirements:
 
 ```bash
-python3 -m venv env
-source env/bin/activate
-pip install -r requires/testing.txt
+./bootstrap
 ```
 
 ## Running Tests
@@ -15,7 +13,7 @@ pip install -r requires/testing.txt
 ```bash
 source env/bin/activate
 flake8
-coverage run -m unittest discover -v; coverage report -m
+coverage run && coverage report
 ```
 
 ## Test Coverage

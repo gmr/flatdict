@@ -20,17 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
 
-      - name: Install testing dependencies
-        run: pip3 install -r requires/testing.txt
+      - name: Bootstrap the test environment
+        run: ./bootstrap
 
       - name: Run flake8 tests
-        run: flake8 --output build/flake8.txt --tee
+        run: flake8
 
-      - name: Run tests
-        run: coverage run -m unittest discover -v
-
-      - name: Output coverage report
-        run: coverage report -m
+      - name: Run unittests
+        run: coverage run && coverage report && coverage xml
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v1.0.2
