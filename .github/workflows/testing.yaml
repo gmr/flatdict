@@ -30,7 +30,7 @@ jobs:
         run: coverage run && coverage report && coverage xml
 
       - name: Upload Coverage
-        uses: codecov/codecov-action@v1.0.2
+        uses: codecov/codecov-action@v1.0.5
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: build/coverage.xml
