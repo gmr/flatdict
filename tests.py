@@ -4,7 +4,6 @@ Unittests for flatdict.FlatDict
 """
 import pickle
 import random
-import sys
 import unittest
 import uuid
 
