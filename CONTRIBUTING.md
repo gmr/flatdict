@@ -16,11 +16,15 @@ flake8
 coverage run && coverage report
 ```
 
+`coverage xml` && `coverage html` are configured to output reports in the `build` directory.
+
 ## Test Coverage
 
 To contribute to `flatdict`, please make sure that any new features or changes to existing functionality **include test coverage**.
 
 *Pull requests that add or change code without coverage have a much lower chance of being accepted.*
+
+**Pull requests that fail flake8 tests as configured will not be accepted.**
 
 ## Code Formatting
 
