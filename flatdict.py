@@ -2,7 +2,10 @@
 key/value pair mapping of nested dictionaries.
 
 """
-import collections
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 import sys
 
 __version__ = '4.0.0'
@@ -10,7 +13,7 @@ __version__ = '4.0.0'
 NO_DEFAULT = object()
 
 
-class FlatDict(collections.MutableMapping):
+class FlatDict(MutableMapping):
     """:class:`~flatdict.FlatDict` is a dictionary object that allows for
     single level, delimited key/value pair mapping of nested dictionaries.
     The default delimiter value is ``:`` but can be changed in the constructor
