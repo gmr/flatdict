@@ -4,7 +4,7 @@ key/value pair mapping of nested dictionaries.
 """
 try:
     from collections.abc import MutableMapping
-except ImportError:
+except ImportError:  # pragma: nocover
     from collections import MutableMapping
 import sys
 
@@ -483,7 +483,7 @@ class FlatterDict(FlatDict):
 
         # Python prior 3.6 don't guarantee insertion order, remove it after
         # EOL python 3.5 - 2020-09-13
-        if sys.version_info[0:2] < (3, 6):
+        if sys.version_info[0:2] < (3, 6):  # pragma: nocover
             return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
-        else:  # pragma: nocover
+        else:
             return [subset[k] for k in keys]
