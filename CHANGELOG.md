@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1 (2020-02-13)
+
+- Gracefully fail to install if setuptools is too old
+
 ## 4.0.0 (2020-02-12)
 
 - FIXED deprecation warning from Python 3.9 (#40 [nugend](https://github.com/nugend))
