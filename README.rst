@@ -3,6 +3,18 @@ FlatDict
 
 |Version| |Status| |Coverage| |License|
 
+Installation
+------------
+
+.. code-block:: bash
+
+    $ pip install flatdict
+
+Note that as of 4.0, setuptools 39.2 or higher is required for installation.
+
+Usage
+-----
+
 ``FlatDict`` and ``FlatterDict`` are a dict classes that allows for single level,
 delimited key/value pair mapping of nested dictionaries. You can interact with
 ``FlatDict`` and ``FlatterDict`` like a normal dictionary and access child
@@ -59,14 +71,6 @@ in the revision.
 It is recommended that you pin your targets to greater or equal to the current
 version and less than the next major version.
 
-Installation
-------------
-
-.. code-block:: bash
-
-    $ pip install flatdict
-
-Note that as of 4.0, setuptools 39.2 or higher is required for installation.
 
 .. |Version| image:: https://img.shields.io/pypi/v/flatdict.svg?
    :target: https://pypi.python.org/pypi/flatdict
