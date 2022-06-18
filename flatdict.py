@@ -423,7 +423,7 @@ class FlatterDict(FlatDict):
         else:
             self._values[key] = value
 
-    def as_dict(self):
+    def as_dict(self, guess_lists=False):
         """Return the :class:`~flatdict.FlatterDict` as a nested
         :class:`dict`.
 
@@ -450,6 +450,26 @@ class FlatterDict(FlatDict):
                     out[key] = self._values[key].original_type()
                 else:
                     out[key] = self._values[key]
+
+        if guess_lists:
+            # if all `out` keys:
+            # - are strings,
+            # - can be converted to ints, and
+            # - and represent a continuous range from 0
+            # then make it a list
+            all_keys_int = True
+            keys_as_nums = []
+            for key in out.keys():
+                if not isinstance(key, str):
+                    all_keys_int = False
+                    break
+                if not key.isdigit():
+                    all_keys_int = False
+                    break
+                keys_as_nums.append(int(key))
+            if all_keys_int and keys_as_nums == list(range(len(keys_as_nums))):
+                out = list(out.values())
+
         return out
 
     def _child_as_list(self, pk, ck=None):
