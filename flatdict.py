@@ -468,7 +468,7 @@ class FlatterDict(FlatDict):
                     break
                 keys_as_nums.append(int(key))
             if all_keys_int and keys_as_nums == list(range(len(keys_as_nums))):
-                out = list(out.values())
+                out = [out[str(k)] for k in range(len(keys_as_nums))]
 
         return out
 
