@@ -546,3 +546,18 @@ class FlatterDictTests(FlatDictTests):
         unflat = flatter.as_dict(guess_lists=False)
         self.assertNotEqual(unflat['foo']['list'], self.AS_DICT['foo']['list'])
         self.assertNotEqual(unflat['neighbors'], self.AS_DICT['neighbors'])
+
+    def test_listify_helpers(self):
+        d = {'0': 3, '1': 4, '2': 5}
+        assert flatdict.FlatterDict._is_dict_listlike(d)
+        self.assertEqual(flatdict.FlatterDict._listify_dict(d), [3, 4, 5])
+
+        d = {'2': 5, '0': 3, '1': 4}  # dict with out-of-order keys produces the correct list
+        assert flatdict.FlatterDict._is_dict_listlike(d)
+        self.assertEqual(flatdict.FlatterDict._listify_dict(d), [3, 4, 5])
+
+        d = {'0': 3, '2': 5}  # keys are not contiguous
+        assert not flatdict.FlatterDict._is_dict_listlike(d)
+
+        d = {'1': 3, '2': 5}  # key sequence does not start at 0
+        assert not flatdict.FlatterDict._is_dict_listlike(d)

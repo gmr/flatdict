@@ -452,23 +452,8 @@ class FlatterDict(FlatDict):
                     out[key] = self._values[key]
 
         if guess_lists:
-            # if all `out` keys:
-            # - are strings,
-            # - can be converted to ints, and
-            # - and represent a continuous range from 0
-            # then make it a list
-            all_keys_int = True
-            keys_as_nums = []
-            for key in out.keys():
-                if not isinstance(key, str):
-                    all_keys_int = False
-                    break
-                if not key.isdigit():
-                    all_keys_int = False
-                    break
-                keys_as_nums.append(int(key))
-            if all_keys_int and keys_as_nums == list(range(len(keys_as_nums))):
-                out = [out[str(k)] for k in range(len(keys_as_nums))]
+            if self._is_dict_listlike(out):
+                out = self._listify_dict(out)
 
         return out
 
@@ -507,3 +492,37 @@ class FlatterDict(FlatDict):
             return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
         else:
             return [subset[k] for k in keys]
+
+    @staticmethod
+    def _listify_dict(dyct):
+        """Listify a dict. Only works in dicts which appear list-like.
+
+        :param dict dyct: The dict to be listified.
+        :rtype: list
+        """
+        return [dyct[str(k)] for k in range(len(dyct))]
+
+    @staticmethod
+    def _is_dict_listlike(dyct):
+        """
+        Returns `True` if a given dict has keys which appear to be list indices, `False` otherwise.
+
+        The criteria for keys being list indices are:
+        - all keys are strings,
+        - all keys can be converted to ints, and
+        - the ints represent a continuous integer sequence from 0
+
+        :param dict dyct: The dict
+        :rtype: bool
+        """
+        all_keys_int = True
+        keys_as_nums = []
+        for key in dyct.keys():
+            if not isinstance(key, str):
+                all_keys_int = False
+                break
+            if not key.isdigit():
+                all_keys_int = False
+                break
+            keys_as_nums.append(int(key))
+        return all_keys_int and set(keys_as_nums) == set(range(len(keys_as_nums)))
