@@ -535,3 +535,14 @@ class FlatterDictTests(FlatDictTests):
         vals['dicts'][0]['a'] = -1
         d.update(vals)
         self.assertEqual(d.as_dict(), vals)
+
+    def test_as_dict_guess_lists(self):
+        plain_dict = dict(self.value)
+        flatter = self.TEST_CLASS(plain_dict)
+        unflat = flatter.as_dict(guess_lists=True)
+        self.assertEqual(unflat['foo']['list'], self.AS_DICT['foo']['list'])
+        self.assertEqual(unflat['neighbors'], self.AS_DICT['neighbors'])
+
+        unflat = flatter.as_dict(guess_lists=False)
+        self.assertNotEqual(unflat['foo']['list'], self.AS_DICT['foo']['list'])
+        self.assertNotEqual(unflat['neighbors'], self.AS_DICT['neighbors'])
