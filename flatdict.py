@@ -444,7 +444,7 @@ class FlatterDict(FlatDict):
                     elif self._values[pk].original_type == set:
                         out[pk] = set(self._child_as_list(pk))
                     elif self._values[pk].original_type == dict:
-                        out[pk] = self._values[pk].as_dict()
+                        out[pk] = self._values[pk].as_dict(guess_lists=guess_lists)
             else:
                 if isinstance(self._values[key], FlatterDict):
                     out[key] = self._values[key].original_type()
