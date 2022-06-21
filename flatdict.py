@@ -8,7 +8,7 @@ except ImportError:  # pragma: nocover
     from collections import MutableMapping
 import sys
 
-__version__ = '4.0.1'
+__version__ = '4.1.0'
 
 NO_DEFAULT = object()
 
