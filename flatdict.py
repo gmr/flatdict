@@ -8,7 +8,7 @@ except ImportError:  # pragma: nocover
     from collections import MutableMapping
 import sys
 
-__version__ = '4.0.1'
+__version__ = '4.1.0'
 
 NO_DEFAULT = object()
 
@@ -423,7 +423,7 @@ class FlatterDict(FlatDict):
         else:
             self._values[key] = value
 
-    def as_dict(self):
+    def as_dict(self, guess_lists=False):
         """Return the :class:`~flatdict.FlatterDict` as a nested
         :class:`dict`.
 
@@ -444,12 +444,17 @@ class FlatterDict(FlatDict):
                     elif self._values[pk].original_type == set:
                         out[pk] = set(self._child_as_list(pk))
                     elif self._values[pk].original_type == dict:
-                        out[pk] = self._values[pk].as_dict()
+                        out[pk] = self._values[pk].as_dict(guess_lists=guess_lists)
             else:
                 if isinstance(self._values[key], FlatterDict):
                     out[key] = self._values[key].original_type()
                 else:
                     out[key] = self._values[key]
+
+        if guess_lists:
+            if self._is_dict_listlike(out):
+                out = self._listify_dict(out)
+
         return out
 
     def _child_as_list(self, pk, ck=None):
@@ -487,3 +492,37 @@ class FlatterDict(FlatDict):
             return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
         else:
             return [subset[k] for k in keys]
+
+    @staticmethod
+    def _listify_dict(dyct):
+        """Listify a dict. Only works in dicts which appear list-like.
+
+        :param dict dyct: The dict to be listified.
+        :rtype: list
+        """
+        return [dyct[str(k)] for k in range(len(dyct))]
+
+    @staticmethod
+    def _is_dict_listlike(dyct):
+        """
+        Returns `True` if a given dict has keys which appear to be list indices, `False` otherwise.
+
+        The criteria for keys being list indices are:
+        - all keys are strings,
+        - all keys can be converted to ints, and
+        - the ints represent a continuous integer sequence from 0
+
+        :param dict dyct: The dict
+        :rtype: bool
+        """
+        all_keys_int = True
+        keys_as_nums = []
+        for key in dyct.keys():
+            if not isinstance(key, str):
+                all_keys_int = False
+                break
+            if not key.isdigit():
+                all_keys_int = False
+                break
+            keys_as_nums.append(int(key))
+        return all_keys_int and set(keys_as_nums) == set(range(len(keys_as_nums)))
