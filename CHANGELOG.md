@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2 (2022-11-15)
+
+- Fix for performance issue in as_dict function
+
 ## 4.0.1 (2020-02-13)
 
 - Gracefully fail to install if setuptools is too old
