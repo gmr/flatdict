@@ -4,6 +4,7 @@ Unittests for flatdict.FlatDict
 """
 import pickle
 import random
+import timeit
 import unittest
 import uuid
 
@@ -114,6 +115,83 @@ class FlatDictTests(unittest.TestCase):
         'waldo': {
             'fred': 6,
             'wanda': 7
+        }
+    }
+
+    PERF_DICT = {
+        'zero': {
+            'one': {
+                'two': 'red',
+                'three': 'blue',
+                'four': 'green'
+            },
+            'two': {
+                'three': 'red',
+                'four': 'blue',
+                'five': 'green'
+            },
+            'three': {
+                'four': {
+                    'five': {
+                        'six': {
+                            'seven': {
+                                'eight': 'red',
+                                'nine': 'blue',
+                                'ten': 'green'
+                            }
+                        },
+                        'seven': {
+                            'eight': {
+                                'nine': 'red',
+                                'ten': 'blue',
+                                'eleven': 'green'
+                            },
+                            'nine': {
+                                'ten': {
+                                    'eleven': {
+                                        'twelve': {
+                                            'thirteen': {
+                                                'fourteen': 'red',
+                                                'fifteen': 'blue',
+                                                'sixteen': 'green'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        'eight': {
+                            'nine': {
+                                'ten': 'red',
+                                'eleven': 'blue',
+                                'twelve': 'green'
+                            },
+                            'ten': {
+                                'eleven': {
+                                    'twelve': {
+                                        'thirteen': {
+                                            'fourteen': {
+                                                'fifteen': 'red',
+                                                'sixteen': 'blue',
+                                                'seventeen': 'green'
+                                            },
+                                            'fifteen': {
+                                                'sixteen': {
+                                                    'seventeen': {
+                                                        'twenty': 'red',
+                                                        'twentey_one': 'blue',
+                                                        'twenty_two': 'green'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -303,6 +381,14 @@ class FlatDictTests(unittest.TestCase):
         flat = self.TEST_CLASS(expectation)
         value = flat.as_dict()
         self.assertDictEqual(value, expectation)
+
+    def test_as_dict_perf(self):
+        m = self.TEST_CLASS(self.PERF_DICT)
+        num_runs = 5
+        max = 0.002
+        duration = timeit.Timer(m.as_dict).timeit(number=num_runs)
+        avg_duration = duration / num_runs
+        self.assertLess(avg_duration, max)
 
 
 class FlatterDictTests(FlatDictTests):
