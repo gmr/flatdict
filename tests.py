@@ -535,3 +535,11 @@ class FlatterDictTests(FlatDictTests):
         vals['dicts'][0]['a'] = -1
         d.update(vals)
         self.assertEqual(d.as_dict(), vals)
+
+    def test_empty_dict_as_dict(self):
+        vals = {'dicts': [{'a': {'b': {'c': {}}}, 'd': 2}]}
+        d = self.TEST_CLASS(vals)
+        d.update(vals)
+        value = d.as_dict()['dicts'][0]['a']['b']['c']
+        self.assertEqual(value, {})
+        self.assertEqual(isinstance(value, dict), True)
