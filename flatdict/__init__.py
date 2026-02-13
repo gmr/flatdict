@@ -2,28 +2,26 @@
 key/value pair mapping of nested dictionaries.
 
 """
-try:
-    from collections.abc import MutableMapping
-except ImportError:  # pragma: nocover
-    from collections import MutableMapping
-import sys
 
-__version__ = '4.0.1'
+import collections.abc
+
+from flatdict._version import __version__ as __version__
 
 NO_DEFAULT = object()
 
 
-class FlatDict(MutableMapping):
+class FlatDict(collections.abc.MutableMapping):
     """:class:`~flatdict.FlatDict` is a dictionary object that allows for
     single level, delimited key/value pair mapping of nested dictionaries.
     The default delimiter value is ``:`` but can be changed in the constructor
     or by calling :meth:`FlatDict.set_delimiter`.
 
     """
+
     _COERCE = dict
 
     def __init__(self, value=None, delimiter=':', dict_class=dict):
-        super(FlatDict, self).__init__()
+        super().__init__()
         self._values = dict_class()
         self._delimiter = delimiter
         self.update(value)
@@ -129,8 +127,7 @@ class FlatDict(MutableMapping):
         :rtype: str
 
         """
-        return '<{} id={} {}>"'.format(self.__class__.__name__, id(self),
-                                       str(self))
+        return f'<{self.__class__.__name__} id={id(self)} {self!s}>"'
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -149,8 +146,7 @@ class FlatDict(MutableMapping):
                 self._values[pk] = self.__class__({ck: value}, self._delimiter)
                 return
             elif not isinstance(self._values[pk], FlatDict):
-                raise TypeError(
-                    'Assignment to invalid type for key {}'.format(pk))
+                raise TypeError(f'Assignment to invalid type for key {pk}')
             self._values[pk][ck] = value
         else:
             self._values[key] = value
@@ -161,8 +157,9 @@ class FlatDict(MutableMapping):
         :rtype: str
 
         """
-        return '{{{}}}'.format(', '.join(
-            ['{!r}: {!r}'.format(k, self[k]) for k in self.keys()]))
+        return '{{{}}}'.format(
+            ', '.join([f'{k!r}: {self[k]!r}' for k in self.keys()])
+        )
 
     def as_dict(self):
         """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
@@ -170,7 +167,7 @@ class FlatDict(MutableMapping):
         :rtype: dict
 
         """
-        out = dict({})
+        out = {}
         for key in self.keys():
             if self._has_delimiter(key):
                 pk, ck = key.split(self._delimiter, 1)
@@ -239,8 +236,7 @@ class FlatDict(MutableMapping):
         :raises: RuntimeError
 
         """
-        for item in self.items():
-            yield item
+        yield from self.items()
 
     def iterkeys(self):
         """Iterate over the flat dictionary's keys. See the note for
@@ -254,8 +250,7 @@ class FlatDict(MutableMapping):
         :raises: RuntimeError
 
         """
-        for key in self.keys():
-            yield key
+        yield from self.keys()
 
     def itervalues(self):
         """Return an iterator over the flat dictionary's values. See the note
@@ -269,8 +264,7 @@ class FlatDict(MutableMapping):
         :raises: RuntimeError
 
         """
-        for value in self.values():
-            yield value
+        yield from self.values()
 
     def keys(self):
         """Return a copy of the flat dictionary's list of keys.
@@ -285,8 +279,9 @@ class FlatDict(MutableMapping):
             if isinstance(value, (FlatDict, dict)):
                 nested = [
                     self._delimiter.join([str(key), str(k)])
-                    for k in value.keys()]
-                keys += nested if nested else [key]
+                    for k in value.keys()
+                ]
+                keys += nested or [key]
             else:
                 keys.append(key)
 
@@ -333,8 +328,9 @@ class FlatDict(MutableMapping):
         """
         for key in self.keys():
             if delimiter in key:
-                raise ValueError('Key {!r} collides with delimiter {!r}', key,
-                                 delimiter)
+                raise ValueError(
+                    f'Key {key!r} collides with delimiter {delimiter!r}'
+                )
         self._delimiter = delimiter
         for key in self._values.keys():
             if isinstance(self._values[key], FlatDict):
@@ -375,10 +371,11 @@ class FlatDict(MutableMapping):
 
 class FlatterDict(FlatDict):
     """Like :class:`~flatdict.FlatDict` but also coerces lists and sets
-     to child-dict instances with the offset as the key. Alternative to
-     the implementation added in v1.2 of FlatDict.
+    to child-dict instances with the offset as the key. Alternative to
+    the implementation added in v1.2 of FlatDict.
 
     """
+
     _COERCE = list, tuple, set, dict, FlatDict
     _ARRAYS = list, set, tuple
 
@@ -386,7 +383,7 @@ class FlatterDict(FlatDict):
         self.original_type = type(value)
         if self.original_type in self._ARRAYS:
             value = {str(i): v for i, v in enumerate(value)}
-        super(FlatterDict, self).__init__(value, delimiter, dict_class)
+        super().__init__(value, delimiter, dict_class)
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
@@ -397,28 +394,31 @@ class FlatterDict(FlatDict):
         :raises: TypeError
 
         """
-        if isinstance(value, self._COERCE) and \
-                not isinstance(value, FlatterDict):
+        if isinstance(value, self._COERCE) and not isinstance(
+            value, FlatterDict
+        ):
             value = self.__class__(value, self._delimiter)
         if self._has_delimiter(key):
             pk, ck = key.split(self._delimiter, 1)
             if pk not in self._values:
                 self._values[pk] = self.__class__({ck: value}, self._delimiter)
                 return
-            if getattr(self._values[pk], 'original_type',
-                       None) in self._ARRAYS:
+            if (
+                getattr(self._values[pk], 'original_type', None)
+                in self._ARRAYS
+            ):
                 try:
                     k, cck = ck.split(self._delimiter, 1)
                     int(k)
-                except ValueError:
+                except ValueError as error:
                     raise TypeError(
-                        'Assignment to invalid type for key {}{}{}'.format(
-                            pk, self._delimiter, ck))
+                        f'Assignment to invalid type for key '
+                        f'{pk}{self._delimiter}{ck}'
+                    ) from error
                 self._values[pk][k][cck] = value
                 return
             elif not isinstance(self._values[pk], FlatterDict):
-                raise TypeError(
-                    'Assignment to invalid type for key {}'.format(pk))
+                raise TypeError(f'Assignment to invalid type for key {pk}')
             self._values[pk][ck] = value
         else:
             self._values[key] = value
@@ -437,13 +437,13 @@ class FlatterDict(FlatDict):
                 if self._has_delimiter(ck):
                     ck = ck.split(self._delimiter, 1)[0]
                 if isinstance(self._values[pk], FlatterDict) and pk not in out:
-                    if self._values[pk].original_type == tuple:
+                    if self._values[pk].original_type is tuple:
                         out[pk] = tuple(self._child_as_list(pk))
-                    elif self._values[pk].original_type == list:
+                    elif self._values[pk].original_type is list:
                         out[pk] = self._child_as_list(pk)
-                    elif self._values[pk].original_type == set:
+                    elif self._values[pk].original_type is set:
                         out[pk] = set(self._child_as_list(pk))
-                    elif self._values[pk].original_type == dict:
+                    elif self._values[pk].original_type is dict:
                         out[pk] = self._values[pk].as_dict()
             else:
                 if isinstance(self._values[key], FlatterDict):
@@ -471,19 +471,14 @@ class FlatterDict(FlatDict):
             out = []
             split_keys = {k.split(self._delimiter)[0] for k in keys}
             for k in sorted(split_keys, key=lambda x: int(x)):
-                if subset[k].original_type == tuple:
+                if subset[k].original_type is tuple:
                     out.append(tuple(self._child_as_list(pk, k)))
-                elif subset[k].original_type == list:
+                elif subset[k].original_type is list:
                     out.append(self._child_as_list(pk, k))
-                elif subset[k].original_type == set:
+                elif subset[k].original_type is set:
                     out.append(set(self._child_as_list(pk, k)))
-                elif subset[k].original_type == dict:
+                elif subset[k].original_type is dict:
                     out.append(subset[k].as_dict())
             return out
 
-        # Python prior 3.6 does not guarantee insertion order, remove it after
-        # EOL python 3.5 - 2020-09-13
-        if sys.version_info[0:2] < (3, 6):  # pragma: nocover
-            return [subset[k] for k in sorted(keys, key=lambda x: int(x))]
-        else:
-            return [subset[k] for k in keys]
+        return [subset[k] for k in keys]
