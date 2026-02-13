@@ -2,8 +2,10 @@
 Unittests for flatdict.FlatDict
 
 """
+
 import pickle
 import random
+import typing
 import unittest
 import uuid
 
@@ -11,10 +13,9 @@ import flatdict
 
 
 class FlatDictTests(unittest.TestCase):
-
     TEST_CLASS = flatdict.FlatDict
 
-    FLAT_EXPECTATION = {
+    FLAT_EXPECTATION: typing.ClassVar[dict] = {
         'foo:bar:baz': 0,
         'foo:bar:qux': 1,
         'foo:bar:corge': 2,
@@ -35,64 +36,37 @@ class FlatDictTests(unittest.TestCase):
         'xyzzy': 'plugh',
         'thud': 5,
         'waldo:fred': 6,
-        'waldo:wanda': 7
+        'waldo:wanda': 7,
     }
 
-    KEYS = [
-        'foo:bar:baz', 'foo:bar:qux', 'foo:bar:corge', 'foo:grault:baz',
-        'foo:grault:qux', 'foo:grault:corge', 'foo:list', 'foo:empty_list',
-        'foo:set', 'foo:empty_set', 'foo:tuple', 'foo:empty_tuple',
-        'garply:foo', 'garply:bar', 'garply:baz', 'garply:qux:corge', 'fred',
-        'xyzzy', 'thud', 'waldo:fred', 'waldo:wanda'
+    KEYS: typing.ClassVar[list] = [
+        'foo:bar:baz',
+        'foo:bar:qux',
+        'foo:bar:corge',
+        'foo:grault:baz',
+        'foo:grault:qux',
+        'foo:grault:corge',
+        'foo:list',
+        'foo:empty_list',
+        'foo:set',
+        'foo:empty_set',
+        'foo:tuple',
+        'foo:empty_tuple',
+        'garply:foo',
+        'garply:bar',
+        'garply:baz',
+        'garply:qux:corge',
+        'fred',
+        'xyzzy',
+        'thud',
+        'waldo:fred',
+        'waldo:wanda',
     ]
 
-    VALUES = {
+    VALUES: typing.ClassVar[dict] = {
         'foo': {
-            'bar': {
-                'baz': 0,
-                'qux': 1,
-                'corge': 2
-            },
-            'grault': {
-                'baz': 3,
-                'qux': 4,
-                'corge': 5
-            },
-            'list': ['F', 'O', 'O'],
-            'empty_list': [],
-            'set': {10, 20, 30},
-            'empty_set': set(),
-            'tuple': ('F', 0, 0),
-            'empty_tuple': ()
-
-        },
-        'garply': {
-            'foo': 0,
-            'bar': 1,
-            'baz': 2,
-            'qux': {
-                'corge': 3
-            }
-        },
-        'fred': 4,
-        'xyzzy': 'plugh',
-        'thud': 5,
-        'waldo:fred': 6,
-        'waldo:wanda': 7
-    }
-
-    AS_DICT = {
-        'foo': {
-            'bar': {
-                'baz': 0,
-                'qux': 1,
-                'corge': 2
-            },
-            'grault': {
-                'baz': 3,
-                'qux': 4,
-                'corge': 5
-            },
+            'bar': {'baz': 0, 'qux': 1, 'corge': 2},
+            'grault': {'baz': 3, 'qux': 4, 'corge': 5},
             'list': ['F', 'O', 'O'],
             'empty_list': [],
             'set': {10, 20, 30},
@@ -100,21 +74,30 @@ class FlatDictTests(unittest.TestCase):
             'tuple': ('F', 0, 0),
             'empty_tuple': (),
         },
-        'garply': {
-            'foo': 0,
-            'bar': 1,
-            'baz': 2,
-            'qux': {
-                'corge': 3
-            }
-        },
+        'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}},
         'fred': 4,
         'xyzzy': 'plugh',
         'thud': 5,
-        'waldo': {
-            'fred': 6,
-            'wanda': 7
-        }
+        'waldo:fred': 6,
+        'waldo:wanda': 7,
+    }
+
+    AS_DICT: typing.ClassVar[dict] = {
+        'foo': {
+            'bar': {'baz': 0, 'qux': 1, 'corge': 2},
+            'grault': {'baz': 3, 'qux': 4, 'corge': 5},
+            'list': ['F', 'O', 'O'],
+            'empty_list': [],
+            'set': {10, 20, 30},
+            'empty_set': set(),
+            'tuple': ('F', 0, 0),
+            'empty_tuple': (),
+        },
+        'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}},
+        'fred': 4,
+        'xyzzy': 'plugh',
+        'thud': 5,
+        'waldo': {'fred': 6, 'wanda': 7},
     }
 
     def setUp(self):
@@ -168,15 +151,17 @@ class FlatDictTests(unittest.TestCase):
         self.assertNotIn('garply', self.value)
 
     def test_iter_keys(self):
-        self.assertListEqual(sorted(self.KEYS),
-                             sorted(k for k in iter(self.value)))
+        self.assertListEqual(
+            sorted(self.KEYS), sorted(k for k in iter(self.value))
+        )
 
     def test_repr_value(self):
         value = self.TEST_CLASS({'foo': 'bar', 'baz': {'qux': 'corgie'}})
         self.assertIn(str(value), repr(value))
         self.assertEqual(
-            repr(value)[0:len(self.TEST_CLASS.__name__) + 1],
-            '<{}'.format(self.TEST_CLASS.__name__))
+            repr(value)[0 : len(self.TEST_CLASS.__name__) + 1],
+            f'<{self.TEST_CLASS.__name__}',
+        )
 
     def test_str_value(self):
         val = self.TEST_CLASS({'foo': 1, 'baz': {'qux': 'corgie'}})
@@ -270,10 +255,12 @@ class FlatDictTests(unittest.TestCase):
         self.value.set_delimiter('-')
         self.assertListEqual(
             sorted(k.replace(':', '-') for k in self.KEYS),
-            sorted(self.value.keys()))
+            sorted(self.value.keys()),
+        )
         self.assertListEqual(
             sorted(str(self.value[k.replace(':', '-')]) for k in self.KEYS),
-            sorted(str(v) for v in self.value.values()))
+            sorted(str(v) for v in self.value.values()),
+        )
 
     def test_update(self):
         expectation = self.TEST_CLASS(self.value.as_dict())
@@ -281,12 +268,14 @@ class FlatDictTests(unittest.TestCase):
         expectation['foo:bar:qux'] = 5
         expectation['foo:bar:corgie'] = 6
         expectation['foo:bar:waldo'] = 7
-        self.value.update({
-            'foo:bar:baz': 4,
-            'foo:bar:qux': 5,
-            'foo:bar:corgie': 6,
-            'foo:bar:waldo': 7
-        })
+        self.value.update(
+            {
+                'foo:bar:baz': 4,
+                'foo:bar:qux': 5,
+                'foo:bar:corgie': 6,
+                'foo:bar:waldo': 7,
+            }
+        )
         self.assertEqual(self.value, expectation)
 
     def test_set_delimiter_collision(self):
@@ -306,10 +295,9 @@ class FlatDictTests(unittest.TestCase):
 
 
 class FlatterDictTests(FlatDictTests):
-
     TEST_CLASS = flatdict.FlatterDict
 
-    FLAT_EXPECTATION = {
+    FLAT_EXPECTATION: typing.ClassVar[dict] = {
         'foo:bar:baz': 0,
         'foo:bar:qux': 1,
         'foo:bar:corge': 2,
@@ -359,7 +347,7 @@ class FlatterDictTests(FlatDictTests):
         'double_nest:2:1': 6,
     }
 
-    KEYS = [
+    KEYS: typing.ClassVar[list] = [
         'foo:bar:baz',
         'foo:bar:qux',
         'foo:bar:corge',
@@ -409,103 +397,55 @@ class FlatterDictTests(FlatDictTests):
         'double_nest:2:1',
     ]
 
-    VALUES = {
+    VALUES: typing.ClassVar[dict] = {
         'foo': {
-            'bar': {
-                'baz': 0,
-                'qux': 1,
-                'corge': 2,
-                'list': [-1, -2, -3]
-            },
-            'grault': {
-                'baz': 3,
-                'qux': 4,
-                'corge': 5
-            },
+            'bar': {'baz': 0, 'qux': 1, 'corge': 2, 'list': [-1, -2, -3]},
+            'grault': {'baz': 3, 'qux': 4, 'corge': 5},
             'list': ['F', 'O', 'O', '', 'B', 'A', 'R', '', 'L', 'I', 'S', 'T'],
             'set': {10, 20, 30},
             'tuple': ('F', 0, 0),
-            'abc': {
-                'def': True
-            }
+            'abc': {'def': True},
         },
-        'garply': {
-            'foo': 0,
-            'bar': 1,
-            'baz': 2,
-            'qux': {
-                'corge': 3
-            }
-        },
+        'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}},
         'fred': 4,
         'xyzzy': 'plugh',
         'thud': 5,
         'waldo:fred': 6,
         'waldo:wanda': 7,
-        'neighbors': [{
-            'left': 'john',
-            'right': 'michelle'
-        }, {
-            'left': 'steven',
-            'right': 'wynona'
-        }],
+        'neighbors': [
+            {'left': 'john', 'right': 'michelle'},
+            {'left': 'steven', 'right': 'wynona'},
+        ],
         'double_nest': [
             [1, 2],
             (3, 4),
             {5, 6},
-        ]
+        ],
     }
 
-    AS_DICT = {
+    AS_DICT: typing.ClassVar[dict] = {
         'foo': {
-            'bar': {
-                'baz': 0,
-                'qux': 1,
-                'corge': 2,
-                'list': [-1, -2, -3]
-            },
-            'grault': {
-                'baz': 3,
-                'qux': 4,
-                'corge': 5
-            },
+            'bar': {'baz': 0, 'qux': 1, 'corge': 2, 'list': [-1, -2, -3]},
+            'grault': {'baz': 3, 'qux': 4, 'corge': 5},
             'list': ['F', 'O', 'O', '', 'B', 'A', 'R', '', 'L', 'I', 'S', 'T'],
             'set': {10, 20, 30},
             'tuple': ('F', 0, 0),
-            'abc': {
-                'def': True
-            }
+            'abc': {'def': True},
         },
-        'garply': {
-            'foo': 0,
-            'bar': 1,
-            'baz': 2,
-            'qux': {
-                'corge': 3
-            }
-        },
-        'fred':
-        4,
-        'xyzzy':
-        'plugh',
-        'thud':
-        5,
-        'waldo': {
-            'fred': 6,
-            'wanda': 7
-        },
-        'neighbors': [{
-            'left': 'john',
-            'right': 'michelle'
-        }, {
-            'left': 'steven',
-            'right': 'wynona'
-        }],
+        'garply': {'foo': 0, 'bar': 1, 'baz': 2, 'qux': {'corge': 3}},
+        'fred': 4,
+        'xyzzy': 'plugh',
+        'thud': 5,
+        'waldo': {'fred': 6, 'wanda': 7},
+        'neighbors': [
+            {'left': 'john', 'right': 'michelle'},
+            {'left': 'steven', 'right': 'wynona'},
+        ],
         'double_nest': [
             [1, 2],
             (3, 4),
             {5, 6},
-        ]
+        ],
     }
 
     def test_set_item(self):

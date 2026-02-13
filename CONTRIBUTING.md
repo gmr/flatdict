@@ -12,7 +12,8 @@ Use of virtual environments will allow for isolated installation of testing requ
 
 ```bash
 source env/bin/activate
-flake8
+ruff check .
+ruff format --check .
 coverage run && coverage report
 ```
 
@@ -24,12 +25,12 @@ To contribute to `flatdict`, please make sure that any new features or changes t
 
 *Pull requests that add or change code without coverage have a much lower chance of being accepted.*
 
-**Pull requests that fail flake8 tests as configured will not be accepted.**
+**Pull requests that fail ruff checks as configured will not be accepted.**
 
 ## Code Formatting
 
-Please format your code using [yapf](http://pypi.python.org/pypi/yapf)
-with ``pep8`` style prior to issuing your pull request.
+Please format your code using [ruff](https://docs.astral.sh/ruff/)
+prior to issuing your pull request.
 
 ## Versioning
 
