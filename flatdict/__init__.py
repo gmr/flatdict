@@ -6,8 +6,6 @@ key/value pair mapping of nested dictionaries.
 import collections.abc
 import typing
 
-from flatdict._version import __version__ as __version__
-
 NO_DEFAULT = object()
 
 
