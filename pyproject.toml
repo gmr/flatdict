@@ -7,7 +7,7 @@ name = "flatdict"
 description = "Python module for interacting with nested dicts as a single level dict with delimited keys."
 readme = "README.md"
 license = "BSD-3-Clause"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dynamic = ["version"]
 authors = [{name = "Gavin M. Roy", email = "gavinmroy@gmail.com"}]
 classifiers = [
@@ -18,8 +18,11 @@ classifiers = [
     "Operating System :: POSIX",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -43,7 +46,7 @@ version-file = "flatdict/_version.py"
 
 [tool.ruff]
 line-length = 79
-target-version = "py312"
+target-version = "py310"
 exclude = ["flatdict/_version.py"]
 
 [tool.ruff.format]
