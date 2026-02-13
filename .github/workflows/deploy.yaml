@@ -7,14 +7,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
-    container: python:3.8-alpine
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Build package
-        run: python3 setup.py sdist
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@master
+        uses: actions/checkout@v4
         with:
-          user: __token__
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build package
+        run: pip install build && python -m build
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
           password: ${{ secrets.PYPI_PASSWORD }}
