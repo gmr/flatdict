@@ -127,7 +127,7 @@ class FlatDict(collections.abc.MutableMapping):
         :rtype: str
 
         """
-        return f'<{self.__class__.__name__} id={id(self)} {self!s}>"'
+        return f'<{self.__class__.__name__} id={id(self)} {self!s}>'
 
     def __setitem__(self, key, value):
         """Assign the value to the key, dynamically building nested
