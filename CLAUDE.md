@@ -20,16 +20,17 @@ coverage report    # print coverage summary
 .venv/bin/python -m unittest tests.FlatDictTests.test_method_name
 
 # Lint
-flake8
+ruff check .
+ruff format --check .
 ```
 
 ## Architecture
 
-Single-module library — all code lives in `flatdict.py`, all tests in `tests.py`.
+Package library — all code lives in `flatdict/__init__.py`, all tests in `tests.py`.
 
 - `FlatDict(MutableMapping)` — core class, flattens nested dicts using a configurable delimiter (default `:`). Uses `maxsplit=1` on delimiter to resolve composite keys one level at a time.
 - `FlatterDict(FlatDict)` — extends FlatDict to also flatten lists/tuples/sets using enumerated string indices, storing `original_type` to reconstruct via `as_dict()`.
 
 ## Lint/Style Config
 
-Flake8 config is in `setup.cfg`. Uses google import order style. `RST304` is ignored.
+Ruff config is in `pyproject.toml`.
