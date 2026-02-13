@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/codecov/c/github/gmr/flatdict.svg?)](https://codecov.io/github/gmr/flatdict?branch=master)
 [![License](https://img.shields.io/pypi/l/flatdict.svg?)](https://flatdict.readthedocs.org)
 
-`FlatDict` and `FlatterDict` are dict classes that allows for single level,
+`FlatDict` and `FlatterDict` are dict classes that allow for single level,
 delimited key/value pair mapping of nested dictionaries. You can interact with
 `FlatDict` and `FlatterDict` like a normal dictionary and access child
 dictionaries as you normally would or with the composite key.
