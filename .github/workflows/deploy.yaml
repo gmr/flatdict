@@ -9,7 +9,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
