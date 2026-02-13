@@ -11,7 +11,7 @@ Use of virtual environments will allow for isolated installation of testing requ
 ## Running Tests
 
 ```bash
-source env/bin/activate
+source .venv/bin/activate
 ruff check .
 ruff format --check .
 coverage run && coverage report
