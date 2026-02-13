@@ -4,13 +4,14 @@ key/value pair mapping of nested dictionaries.
 """
 
 import collections.abc
+import typing
 
 from flatdict._version import __version__ as __version__
 
 NO_DEFAULT = object()
 
 
-class FlatDict(collections.abc.MutableMapping):
+class FlatDict(collections.abc.MutableMapping[str, typing.Any]):
     """:class:`~flatdict.FlatDict` is a dictionary object that allows for
     single level, delimited key/value pair mapping of nested dictionaries.
     The default delimiter value is ``:`` but can be changed in the constructor
@@ -18,15 +19,20 @@ class FlatDict(collections.abc.MutableMapping):
 
     """
 
-    _COERCE = dict
+    _COERCE: type | tuple[type, ...] = dict
 
-    def __init__(self, value=None, delimiter=':', dict_class=dict):
+    def __init__(
+        self,
+        value: dict[str, typing.Any] | None = None,
+        delimiter: str = ':',
+        dict_class: type[dict[str, typing.Any]] = dict,
+    ) -> None:
         super().__init__()
         self._values = dict_class()
         self._delimiter = delimiter
         self.update(value)
 
-    def __contains__(self, key):
+    def __contains__(self, key: object) -> bool:
         """Check to see if the key exists, checking for both delimited and
         not delimited key values.
 
@@ -38,7 +44,7 @@ class FlatDict(collections.abc.MutableMapping):
             return pk in self._values and ck in self._values[pk]
         return key in self._values
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str) -> None:
         """Delete the item for the specified key, automatically dealing with
         nested children.
 
@@ -56,7 +62,7 @@ class FlatDict(collections.abc.MutableMapping):
         else:
             del self._values[key]
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Check for equality against the other value
 
         :param other: The value to compare
@@ -71,7 +77,7 @@ class FlatDict(collections.abc.MutableMapping):
             raise TypeError
         return self.as_dict() == other.as_dict()
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         """Check for inequality against the other value
 
         :param other: The value to compare
@@ -81,7 +87,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return not self.__eq__(other)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str | int) -> typing.Any:
         """Get an item for the specified key, automatically dealing with
         nested children.
 
@@ -96,7 +102,7 @@ class FlatDict(collections.abc.MutableMapping):
             values = values[part]
         return values
 
-    def __iter__(self):
+    def __iter__(self) -> collections.abc.Iterator[str]:
         """Iterate over the flat dictionary key and values
 
         :rtype: Iterator
@@ -105,7 +111,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return iter(self.keys())
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Return the number of items.
 
         :rtype: int
@@ -113,7 +119,9 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return len(self.keys())
 
-    def __reduce__(self):
+    def __reduce__(
+        self,
+    ) -> tuple[type, tuple[dict[str, typing.Any], str]]:
         """Return state information for pickling
 
         :rtype: tuple
@@ -121,7 +129,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return type(self), (self.as_dict(), self._delimiter)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return the string representation of the instance.
 
         :rtype: str
@@ -129,7 +137,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return f'<{self.__class__.__name__} id={id(self)} {self!s}>'
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: typing.Any) -> None:
         """Assign the value to the key, dynamically building nested
         FlatDict items where appropriate.
 
@@ -151,7 +159,7 @@ class FlatDict(collections.abc.MutableMapping):
         else:
             self._values[key] = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return the string value of the instance.
 
         :rtype: str
@@ -161,13 +169,13 @@ class FlatDict(collections.abc.MutableMapping):
             ', '.join([f'{k!r}: {self[k]!r}' for k in self.keys()])
         )
 
-    def as_dict(self):
+    def as_dict(self) -> dict[str, typing.Any]:
         """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
 
         :rtype: dict
 
         """
-        out = {}
+        out: dict[str, typing.Any] = {}
         for key in self.keys():
             if self._has_delimiter(key):
                 pk, ck = key.split(self._delimiter, 1)
@@ -183,11 +191,11 @@ class FlatDict(collections.abc.MutableMapping):
                 out[key] = self._values[key]
         return out
 
-    def clear(self):
+    def clear(self) -> None:
         """Remove all items from the flat dictionary."""
         self._values.clear()
 
-    def copy(self):
+    def copy(self) -> 'FlatDict':
         """Return a shallow copy of the flat dictionary.
 
         :rtype: flatdict.FlatDict
@@ -195,7 +203,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return self.__class__(self.as_dict(), delimiter=self._delimiter)
 
-    def get(self, key, d=None):
+    def get(self, key: str, d: typing.Any = None) -> typing.Any:
         """Return the value for key if key is in the flat dictionary, else
         default. If default is not given, it defaults to ``None``, so that this
         method never raises :exc:`KeyError`.
@@ -210,7 +218,7 @@ class FlatDict(collections.abc.MutableMapping):
         except KeyError:
             return d
 
-    def items(self):
+    def items(self) -> list[tuple[str, typing.Any]]:
         """Return a copy of the flat dictionary's list of ``(key, value)``
         pairs.
 
@@ -224,7 +232,9 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return [(k, self.__getitem__(k)) for k in self.keys()]
 
-    def iteritems(self):
+    def iteritems(
+        self,
+    ) -> collections.abc.Iterator[tuple[str, typing.Any]]:
         """Return an iterator over the flat dictionary's (key, value) pairs.
         See the note for :meth:`flatdict.FlatDict.items`.
 
@@ -238,7 +248,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         yield from self.items()
 
-    def iterkeys(self):
+    def iterkeys(self) -> collections.abc.Iterator[str]:
         """Iterate over the flat dictionary's keys. See the note for
         :meth:`flatdict.FlatDict.items`.
 
@@ -252,7 +262,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         yield from self.keys()
 
-    def itervalues(self):
+    def itervalues(self) -> collections.abc.Iterator[typing.Any]:
         """Return an iterator over the flat dictionary's values. See the note
         :meth:`flatdict.FlatDict.items`.
 
@@ -266,7 +276,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         yield from self.values()
 
-    def keys(self):
+    def keys(self) -> list[str]:
         """Return a copy of the flat dictionary's list of keys.
         See the note for :meth:`flatdict.FlatDict.items`.
 
@@ -287,7 +297,7 @@ class FlatDict(collections.abc.MutableMapping):
 
         return keys
 
-    def pop(self, key, default=NO_DEFAULT):
+    def pop(self, key: str, default: typing.Any = NO_DEFAULT) -> typing.Any:
         """If key is in the flat dictionary, remove it and return its value,
         else return default. If default is not given and key is not in the
         dictionary, :exc:`KeyError` is raised.
@@ -303,7 +313,7 @@ class FlatDict(collections.abc.MutableMapping):
         self.__delitem__(key)
         return value
 
-    def setdefault(self, key, default):
+    def setdefault(self, key: str, default: typing.Any) -> typing.Any:
         """If key is in the flat dictionary, return its value. If not,
         insert key with a value of default and return default.
         default defaults to ``None``.
@@ -317,7 +327,7 @@ class FlatDict(collections.abc.MutableMapping):
             self.__setitem__(key, default)
         return self.__getitem__(key)
 
-    def set_delimiter(self, delimiter):
+    def set_delimiter(self, delimiter: str) -> None:
         """Override the default or passed in delimiter with a new value. If
         the requested delimiter already exists in a key, a :exc:`ValueError`
         will be raised.
@@ -336,7 +346,7 @@ class FlatDict(collections.abc.MutableMapping):
             if isinstance(self._values[key], FlatDict):
                 self._values[key].set_delimiter(delimiter)
 
-    def update(self, other=None, **kwargs):
+    def update(self, other: typing.Any = None, **kwargs: typing.Any) -> None:
         """Update the flat dictionary with the key/value pairs from other,
         overwriting existing keys.
 
@@ -351,7 +361,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         [self.__setitem__(k, v) for k, v in dict(other or kwargs).items()]
 
-    def values(self):
+    def values(self) -> list[typing.Any]:
         """Return a copy of the flat dictionary's list of values. See the note
         for :meth:`flatdict.FlatDict.items`.
 
@@ -360,7 +370,7 @@ class FlatDict(collections.abc.MutableMapping):
         """
         return [self.__getitem__(k) for k in self.keys()]
 
-    def _has_delimiter(self, key):
+    def _has_delimiter(self, key: object) -> bool:
         """Checks to see if the key contains the delimiter.
 
         :rtype: bool
@@ -376,16 +386,27 @@ class FlatterDict(FlatDict):
 
     """
 
-    _COERCE = list, tuple, set, dict, FlatDict
-    _ARRAYS = list, set, tuple
+    _COERCE: type | tuple[type, ...] = (list, tuple, set, dict, FlatDict)
+    _ARRAYS: tuple[type, ...] = (list, set, tuple)
 
-    def __init__(self, value=None, delimiter=':', dict_class=dict):
-        self.original_type = type(value)
+    def __init__(
+        self,
+        value: (
+            dict[str, typing.Any]
+            | list[typing.Any]
+            | tuple[typing.Any, ...]
+            | set[typing.Any]
+            | None
+        ) = None,
+        delimiter: str = ':',
+        dict_class: type[dict[str, typing.Any]] = dict,
+    ) -> None:
+        self.original_type: type = type(value)
         if self.original_type in self._ARRAYS:
             value = {str(i): v for i, v in enumerate(value)}
         super().__init__(value, delimiter, dict_class)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: typing.Any) -> None:
         """Assign the value to the key, dynamically building nested
         FlatDict items where appropriate.
 
@@ -423,14 +444,14 @@ class FlatterDict(FlatDict):
         else:
             self._values[key] = value
 
-    def as_dict(self):
+    def as_dict(self) -> dict[str, typing.Any]:
         """Return the :class:`~flatdict.FlatterDict` as a nested
         :class:`dict`.
 
         :rtype: dict
 
         """
-        out = {}
+        out: dict[str, typing.Any] = {}
         for key in self.keys():
             if self._has_delimiter(key):
                 pk, ck = key.split(self._delimiter, 1)
@@ -452,7 +473,9 @@ class FlatterDict(FlatDict):
                     out[key] = self._values[key]
         return out
 
-    def _child_as_list(self, pk, ck=None):
+    def _child_as_list(
+        self, pk: str, ck: str | None = None
+    ) -> list[typing.Any]:
         """Returns a list of values from the child FlatterDict instance
         with string based integer keys.
 
