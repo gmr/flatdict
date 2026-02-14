@@ -1,19 +1,16 @@
 import datetime
-import os
-import sys
+import importlib.metadata
 
-import pkg_resources
-
-sys.path.insert(0, os.path.abspath('..'))
 master_doc = 'index'
 project = 'flatdict'
-release = version = pkg_resources.get_distribution(project).version
-copyright = '{}, Gavin M. Roy'.format(datetime.date.today().year)
+release = version = importlib.metadata.version('flatdict')
+year = datetime.datetime.now(tz=datetime.UTC).year
+copyright = f'{year}, Gavin M. Roy'
 
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
 ]
 
 templates_path = ['_templates']

@@ -5,6 +5,6 @@ build
 dist
 .coverage
 coverage
-env
-env27
+.venv
 *.egg-info
+flatdict/_version.py
