@@ -8,3 +8,4 @@ coverage
 .venv
 *.egg-info
 flatdict/_version.py
+.python-version

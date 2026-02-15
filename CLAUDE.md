@@ -9,19 +9,19 @@ FlatDict is a single-module Python library providing `FlatDict` and `FlatterDict
 ## Commands
 
 ```bash
-# Setup dev environment (creates venv in .venv/, installs test deps)
-./bootstrap
+# Setup dev environment
+uv sync
 
 # Run tests
-coverage run       # runs unittest discover under coverage
-coverage report    # print coverage summary
+uv run coverage run       # runs unittest discover under coverage
+uv run coverage report    # print coverage summary
 
 # Run a single test
-.venv/bin/python -m unittest tests.FlatDictTests.test_method_name
+uv run python -m unittest tests.FlatDictTests.test_method_name
 
 # Lint
-ruff check .
-ruff format --check .
+uv run ruff check .
+uv run ruff format --check .
 ```
 
 ## Architecture
