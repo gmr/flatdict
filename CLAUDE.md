@@ -13,11 +13,11 @@ FlatDict is a single-module Python library providing `FlatDict` and `FlatterDict
 uv sync
 
 # Run tests
-uv run coverage run       # runs unittest discover under coverage
+uv run coverage run       # runs pytest under coverage
 uv run coverage report    # print coverage summary
 
 # Run a single test
-uv run python -m unittest tests.FlatDictTests.test_method_name
+uv run pytest tests.py::FlatDictTests::test_method_name
 
 # Lint
 uv run ruff check .

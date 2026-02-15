@@ -32,11 +32,11 @@ jobs:
       - name: Run ruff format check
         run: uv run ruff format --check .
 
-      - name: Run unittests
+      - name: Run tests
         run: uv run coverage run && uv run coverage report && uv run coverage xml
 
       - name: Upload Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: build/coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
