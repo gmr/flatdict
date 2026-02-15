@@ -2,19 +2,18 @@
 
 ## Setting up a development environment
 
-Use of virtual environments will allow for isolated installation of testing requirements:
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and run:
 
 ```bash
-./bootstrap
+uv sync
 ```
 
 ## Running Tests
 
 ```bash
-source .venv/bin/activate
-ruff check .
-ruff format --check .
-coverage run && coverage report
+uv run ruff check .
+uv run ruff format --check .
+uv run coverage run && uv run coverage report
 ```
 
 `coverage xml` && `coverage html` are configured to output reports in the `build` directory.

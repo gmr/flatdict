@@ -27,10 +27,10 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "build",
-    "coverage",
+    "coverage[toml]",
+    "pytest",
     "ruff",
 ]
 
@@ -80,9 +80,13 @@ flake8-quotes = {inline-quotes = "single"}
 [tool.ruff.lint.isort]
 known-first-party = ["flatdict"]
 
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["tests.py"]
+
 [tool.coverage.run]
 branch = true
-command_line = "-m unittest discover"
+command_line = "-m pytest"
 
 [tool.coverage.report]
 show_missing = true
