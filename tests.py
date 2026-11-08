@@ -475,3 +475,72 @@ class FlatterDictTests(FlatDictTests):
         vals['dicts'][0]['a'] = -1
         d.update(vals)
         self.assertEqual(d.as_dict(), vals)
+
+    def test_as_dict_mixed_container_and_scalar_items(self):
+        for scalar in (None, False, 0, 1.5, 'text', b'bytes'):
+            for items in ([{'b': 'c'}, scalar], [scalar, {'b': 'c'}]):
+                for container in (list, tuple):
+                    with self.subTest(scalar=scalar, container=container):
+                        expected = {'items': container(items)}
+                        value = self.TEST_CLASS(expected)
+                        self.assertEqual(value.as_dict(), expected)
+                        self.assertIs(
+                            type(value.as_dict()['items']), container
+                        )
+
+    def test_as_dict_mixed_items_at_multiple_depths(self):
+        expected = {
+            'items': [
+                [{'a': 1}, 2, (3, {'b': 4})],
+                (5, [{'c': 6}, 7]),
+                {'nested': [8, {'d': 9}]},
+                'tail',
+            ]
+        }
+        value = self.TEST_CLASS(expected)
+        self.assertEqual(value.as_dict(), expected)
+        self.assertEqual(value.as_dict(), expected)
+        self.assertEqual(value.copy().as_dict(), expected)
+        self.assertEqual(pickle.loads(pickle.dumps(value)).as_dict(), expected)
+
+    def test_as_dict_mixed_empty_containers(self):
+        for items in ([{}, [], (), set(), None], [1, {}, [], (), set()]):
+            for delimiter in (':', '::', '/'):
+                with self.subTest(items=items, delimiter=delimiter):
+                    value = self.TEST_CLASS({'items': items}, delimiter)
+                    restored = value.as_dict()['items']
+                    self.assertEqual(restored, items)
+                    self.assertEqual(
+                        [type(item) for item in restored],
+                        [type(item) for item in items],
+                    )
+
+    def test_as_dict_mixed_set_items(self):
+        expected = {'items': {(1, 2), 3, (4, (5, 6))}}
+        self.assertEqual(self.TEST_CLASS(expected).as_dict(), expected)
+
+    def test_as_dict_mixed_items_preserves_numeric_order(self):
+        items = [{'value': i} if i % 2 else i for i in range(13)]
+        self.assertEqual(
+            self.TEST_CLASS({'items': items}).as_dict(), {'items': items}
+        )
+
+    def test_as_dict_mixed_items_after_deletion(self):
+        value = self.TEST_CLASS(
+            {'items': [{'a': 0}, 'delete', {'a': 2}, 'keep']}
+        )
+        del value['items:1']
+        self.assertEqual(
+            value.as_dict(), {'items': [{'a': 0}, {'a': 2}, 'keep']}
+        )
+
+    def test_as_dict_scalar_array_after_deletion(self):
+        value = self.TEST_CLASS({'items': [0, 1, 2, 3]})
+        del value['items:1']
+        self.assertEqual(value.as_dict(), {'items': [0, 2, 3]})
+
+    def test_as_dict_mixed_items_with_custom_delimiter(self):
+        expected = {'items': [{'key': [1, {'a': 2}]}, None, (3, {'b': 4})]}
+        value = self.TEST_CLASS(expected, '::')
+        self.assertEqual(value.as_dict(), expected)
+        self.assertEqual(value['items::0::key::1::a'], 2)
