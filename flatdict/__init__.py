@@ -489,17 +489,15 @@ class FlatterDict(FlatDict):
         # Check if keys has delimiter, which implies deeply nested dict
         keys = subset.keys()
         if any(self._has_delimiter(k) for k in keys):
-            out = []
             split_keys = {k.split(self._delimiter)[0] for k in keys}
-            for k in sorted(split_keys, key=lambda x: int(x)):
-                if subset[k].original_type is tuple:
-                    out.append(tuple(self._child_as_list(pk, k)))
-                elif subset[k].original_type is list:
-                    out.append(self._child_as_list(pk, k))
-                elif subset[k].original_type is set:
-                    out.append(set(self._child_as_list(pk, k)))
-                elif subset[k].original_type is dict:
-                    out.append(subset[k].as_dict())
-            return out
-
-        return [subset[k] for k in keys]
+            keys = sorted(split_keys, key=lambda x: int(x))
+        out = []
+        for key in keys:
+            value = subset[key]
+            if isinstance(value, FlatterDict):
+                if value.original_type in self._ARRAYS:
+                    value = value.original_type(subset._child_as_list(key))
+                else:
+                    value = value.as_dict()
+            out.append(value)
+        return out
