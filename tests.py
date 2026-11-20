@@ -3,6 +3,7 @@ Unittests for flatdict.FlatDict
 
 """
 
+import json
 import pickle
 import random
 import typing
@@ -292,6 +293,18 @@ class FlatDictTests(unittest.TestCase):
         flat = self.TEST_CLASS(expectation)
         value = flat.as_dict()
         self.assertDictEqual(value, expectation)
+
+    def test_empty_dict_values_are_json_serializable(self):
+        for delimiter in (':', '/'):
+            expectation = {'empty': {}, 'value': 1}
+            for depth in range(1, 6):
+                with self.subTest(delimiter=delimiter, depth=depth):
+                    flat = self.TEST_CLASS(expectation, delimiter=delimiter)
+                    value = flat.as_dict()
+                    self.assertEqual(
+                        json.loads(json.dumps(value)), expectation
+                    )
+                expectation = {'nested': expectation}
 
 
 class FlatterDictTests(FlatDictTests):

@@ -186,7 +186,10 @@ class FlatDict(collections.abc.MutableMapping[str, typing.Any]):
                 else:
                     out[pk][ck] = self._values[pk][ck]
             else:
-                out[key] = self._values[key]
+                value = self._values[key]
+                out[key] = (
+                    value.as_dict() if isinstance(value, FlatDict) else value
+                )
         return out
 
     def clear(self) -> None:
