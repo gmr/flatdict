@@ -294,6 +294,11 @@ class FlatDictTests(unittest.TestCase):
                 value.update(other, added=3)
                 self.assertEqual(value.as_dict(), {'keep': 0, 'added': 3})
 
+    def test_update_keywords_after_hierarchical_positional_values(self):
+        value = self.TEST_CLASS()
+        value.update({'root': {}, 'root:leaf': 1}, root=2)
+        self.assertEqual(value.as_dict(), {'root': 2})
+
     def test_set_delimiter_collision(self):
         value = self.TEST_CLASS({'foo_bar': {'qux': 1}})
         with self.assertRaises(ValueError):

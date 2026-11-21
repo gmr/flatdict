@@ -357,7 +357,9 @@ class FlatDict(collections.abc.MutableMapping[str, typing.Any]):
         :rtype: None
 
         """
-        for key, value in dict(other or {}, **kwargs).items():
+        for key, value in dict(other or {}).items():
+            self[key] = value
+        for key, value in kwargs.items():
             self[key] = value
 
     def values(self) -> list[typing.Any]:
