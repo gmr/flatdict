@@ -278,6 +278,27 @@ class FlatDictTests(unittest.TestCase):
         )
         self.assertEqual(self.value, expectation)
 
+    def test_update_positional_and_keywords(self):
+        for other in ({'shared': 1}, [('shared', 1)]):
+            with self.subTest(other=other):
+                value = self.TEST_CLASS({'keep': 0})
+                value.update(other, shared=2, added=3)
+                self.assertEqual(
+                    value.as_dict(), {'keep': 0, 'shared': 2, 'added': 3}
+                )
+
+    def test_update_keywords_without_positional_values(self):
+        for other in (None, {}, []):
+            with self.subTest(other=other):
+                value = self.TEST_CLASS({'keep': 0})
+                value.update(other, added=3)
+                self.assertEqual(value.as_dict(), {'keep': 0, 'added': 3})
+
+    def test_update_keywords_after_hierarchical_positional_values(self):
+        value = self.TEST_CLASS()
+        value.update({'root': {}, 'root:leaf': 1}, root=2)
+        self.assertEqual(value.as_dict(), {'root': 2})
+
     def test_set_delimiter_collision(self):
         value = self.TEST_CLASS({'foo_bar': {'qux': 1}})
         with self.assertRaises(ValueError):
