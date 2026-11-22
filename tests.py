@@ -455,6 +455,56 @@ class FlatterDictTests(FlatDictTests):
         d['double_nest:0:0'] = -1
         self.assertEqual(d.as_dict(), new_vals)
 
+    def test_set_item_list_index(self):
+        d = self.TEST_CLASS({'a': [3, 4]})
+        d['a:0'] = 1
+        self.assertEqual(d['a:0'], 1)
+        self.assertEqual(d.as_dict(), {'a': [1, 4]})
+
+    def test_set_item_tuple_index(self):
+        d = self.TEST_CLASS({'a': (3, 4)})
+        d['a:1'] = 1
+        self.assertEqual(d.as_dict(), {'a': (3, 1)})
+
+    def test_set_item_nested_list_index(self):
+        d = self.TEST_CLASS({'foo': {'bar': ['a', 'b', 'c']}})
+        d['foo:bar:2'] = 'z'
+        self.assertEqual(d.as_dict(), {'foo': {'bar': ['a', 'b', 'z']}})
+
+    def test_set_item_list_in_list_index(self):
+        d = self.TEST_CLASS({'a': [[1, 2], [3, 4]]})
+        d['a:1:0'] = -3
+        self.assertEqual(d.as_dict(), {'a': [[1, 2], [-3, 4]]})
+
+    def test_set_item_list_index_custom_delimiter(self):
+        d = self.TEST_CLASS({'a': [3, 4]}, delimiter='.')
+        d['a.1'] = 5
+        self.assertEqual(d.as_dict(), {'a': [3, 5]})
+
+    def test_set_item_all_values_as_str(self):
+        d = self.TEST_CLASS(
+            {'x': '12', 'channel': 33, 'email': ['jack@example.com']}
+        )
+        for key in d.keys():
+            d[key] = str(d[key])
+        self.assertEqual(
+            d.as_dict(),
+            {'x': '12', 'channel': '33', 'email': ['jack@example.com']},
+        )
+
+    def test_set_item_list_index_out_of_range_raises(self):
+        d = self.TEST_CLASS({'a': [3, 4]})
+        for key in ('a:2', 'a:5', 'a:-1', 'a:2:b'):
+            with self.subTest(key=key), self.assertRaises(IndexError):
+                d[key] = 1
+        self.assertEqual(d.as_dict(), {'a': [3, 4]})
+
+    def test_set_item_nested_list_index_out_of_range_raises(self):
+        d = self.TEST_CLASS({'a': [[1, 2]]})
+        with self.assertRaises(IndexError):
+            d['a:0:2'] = 3
+        self.assertEqual(d.as_dict(), {'a': [[1, 2]]})
+
     def test_update_nest(self):
         vals = {'double_nest': [[1, 2], [3, 4]]}
         d = self.TEST_CLASS(vals)
