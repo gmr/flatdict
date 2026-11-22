@@ -413,7 +413,9 @@ class FlatterDict(FlatDict):
         :raises: TypeError
 
         """
-        if isinstance(value, self._COERCE) and not isinstance(
+        if type(value) in self._ARRAYS and not value:
+            value = type(value)()
+        elif isinstance(value, self._COERCE) and not isinstance(
             value, FlatterDict
         ):
             value = self.__class__(value, self._delimiter)
