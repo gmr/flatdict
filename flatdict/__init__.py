@@ -411,6 +411,7 @@ class FlatterDict(FlatDict):
         :param mixed key: The key for the item
         :param mixed value: The value for the item
         :raises: TypeError
+        :raises: IndexError
 
         """
         if isinstance(value, self._COERCE) and not isinstance(
@@ -426,15 +427,20 @@ class FlatterDict(FlatDict):
                 getattr(self._values[pk], 'original_type', None)
                 in self._ARRAYS
             ):
+                index = ck.split(self._delimiter, 1)[0]
                 try:
-                    k, cck = ck.split(self._delimiter, 1)
-                    int(k)
+                    int(index)
                 except ValueError as error:
                     raise TypeError(
                         f'Assignment to invalid type for key '
                         f'{pk}{self._delimiter}{ck}'
                     ) from error
-                self._values[pk][k][cck] = value
+                if index not in self._values[pk]:
+                    raise IndexError(
+                        f'Index out of range for key '
+                        f'{pk}{self._delimiter}{index}'
+                    )
+                self._values[pk][ck] = value
                 return
             elif not isinstance(self._values[pk], FlatterDict):
                 raise TypeError(f'Assignment to invalid type for key {pk}')
@@ -492,7 +498,9 @@ class FlatterDict(FlatDict):
             out = []
             split_keys = {k.split(self._delimiter)[0] for k in keys}
             for k in sorted(split_keys, key=lambda x: int(x)):
-                if subset[k].original_type is tuple:
+                if not isinstance(subset[k], FlatterDict):
+                    out.append(subset[k])
+                elif subset[k].original_type is tuple:
                     out.append(tuple(self._child_as_list(pk, k)))
                 elif subset[k].original_type is list:
                     out.append(self._child_as_list(pk, k))
@@ -502,4 +510,10 @@ class FlatterDict(FlatDict):
                     out.append(subset[k].as_dict())
             return out
 
-        return [subset[k] for k in keys]
+        # Without delimited keys, any FlatterDict child is an empty container
+        return [
+            subset[k].original_type()
+            if isinstance(subset[k], FlatterDict)
+            else subset[k]
+            for k in keys
+        ]
