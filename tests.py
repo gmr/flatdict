@@ -475,3 +475,36 @@ class FlatterDictTests(FlatDictTests):
         vals['dicts'][0]['a'] = -1
         d.update(vals)
         self.assertEqual(d.as_dict(), vals)
+
+    def test_empty_arrays_remain_array_leaves(self):
+        for empty in ([], (), set()):
+            with self.subTest(array_type=type(empty)):
+                d = self.TEST_CLASS({'parent': {'empty': empty}})
+                self.assertEqual(d['parent:empty'], empty)
+                self.assertIs(type(d['parent:empty']), type(empty))
+                self.assertEqual(d.items(), [('parent:empty', empty)])
+                self.assertEqual(d.values(), [empty])
+                self.assertEqual(dict(d), {'parent:empty': empty})
+                self.assertEqual(d.as_dict(), {'parent': {'empty': empty}})
+
+    def test_empty_arrays_inside_arrays_remain_array_leaves(self):
+        d = self.TEST_CLASS({'arrays': [[], (), set()]})
+        self.assertEqual(
+            dict(d),
+            {
+                'arrays:0': [],
+                'arrays:1': (),
+                'arrays:2': set(),
+            },
+        )
+        self.assertEqual(d.as_dict(), {'arrays': [[], (), set()]})
+
+    def test_assigning_an_empty_array_preserves_its_type(self):
+        d = self.TEST_CLASS({'parent': {'items': [1, 2]}})
+        for empty in ([], (), set()):
+            with self.subTest(array_type=type(empty)):
+                d['parent:items'] = empty
+                self.assertEqual(dict(d), {'parent:items': empty})
+                self.assertEqual(d.as_dict(), {'parent': {'items': empty}})
+        d['parent:items'] = [3]
+        self.assertEqual(dict(d), {'parent:items:0': 3})
