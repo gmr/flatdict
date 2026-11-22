@@ -113,6 +113,33 @@ Example Use
     for key, value in value.items():
         print(key, value)
 
+Exporting to a dictionary
+-------------------------
+
+Use ``dict(value)`` to export the flattened keys to a standard dictionary.
+Use :meth:`~flatdict.FlatDict.as_dict` to restore the nested structure:
+
+.. code-block:: pycon
+
+    >>> import flatdict
+    >>> value = flatdict.FlatDict({'a': {'b': 1}})
+    >>> dict(value)
+    {'a:b': 1}
+    >>> value.as_dict()
+    {'a': {'b': 1}}
+
+For :class:`~flatdict.FlatterDict`, ``dict(value)`` retains the enumerated
+keys, while :meth:`~flatdict.FlatterDict.as_dict` reconstructs the original
+list or tuple:
+
+.. code-block:: pycon
+
+    >>> value = flatdict.FlatterDict({'list': ['a', 'b']})
+    >>> dict(value)
+    {'list:0': 'a', 'list:1': 'b'}
+    >>> value.as_dict()
+    {'list': ['a', 'b']}
+
 .. _docs:
 
 API Documentation
