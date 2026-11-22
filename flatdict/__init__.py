@@ -510,4 +510,10 @@ class FlatterDict(FlatDict):
                     out.append(subset[k].as_dict())
             return out
 
-        return [subset[k] for k in keys]
+        # Without delimited keys, any FlatterDict child is an empty container
+        return [
+            subset[k].original_type()
+            if isinstance(subset[k], FlatterDict)
+            else subset[k]
+            for k in keys
+        ]

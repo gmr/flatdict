@@ -491,6 +491,15 @@ class FlatterDictTests(FlatDictTests):
         d['a:1'] = 'z'
         self.assertEqual(d.as_dict(), {'a': [[1, 2], 'z']})
 
+    def test_set_item_replace_keeps_empty_container_siblings(self):
+        for empty in ({}, [], (), set()):
+            with self.subTest(empty=empty):
+                d = self.TEST_CLASS({'a': [empty, {'x': 1}]})
+                d['a:1'] = 3
+                result = d.as_dict()['a']
+                self.assertEqual(result, [empty, 3])
+                self.assertIs(type(result[0]), type(empty))
+
     def test_set_item_list_index_custom_delimiter(self):
         d = self.TEST_CLASS({'a': [3, 4]}, delimiter='.')
         d['a.1'] = 5
