@@ -476,6 +476,21 @@ class FlatterDictTests(FlatDictTests):
         d['a:1:0'] = -3
         self.assertEqual(d.as_dict(), {'a': [[1, 2], [-3, 4]]})
 
+    def test_set_item_replace_nested_element_with_scalar(self):
+        for index, expectation in (
+            ('0', {'a': [3, {'y': 2}]}),
+            ('1', {'a': [{'x': 1}, 3]}),
+        ):
+            with self.subTest(index=index):
+                d = self.TEST_CLASS({'a': [{'x': 1}, {'y': 2}]})
+                d[f'a:{index}'] = 3
+                self.assertEqual(d.as_dict(), expectation)
+
+    def test_set_item_replace_nested_list_with_scalar(self):
+        d = self.TEST_CLASS({'a': [[1, 2], (3, 4)]})
+        d['a:1'] = 'z'
+        self.assertEqual(d.as_dict(), {'a': [[1, 2], 'z']})
+
     def test_set_item_list_index_custom_delimiter(self):
         d = self.TEST_CLASS({'a': [3, 4]}, delimiter='.')
         d['a.1'] = 5

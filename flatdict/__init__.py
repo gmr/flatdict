@@ -498,7 +498,9 @@ class FlatterDict(FlatDict):
             out = []
             split_keys = {k.split(self._delimiter)[0] for k in keys}
             for k in sorted(split_keys, key=lambda x: int(x)):
-                if subset[k].original_type is tuple:
+                if not isinstance(subset[k], FlatterDict):
+                    out.append(subset[k])
+                elif subset[k].original_type is tuple:
                     out.append(tuple(self._child_as_list(pk, k)))
                 elif subset[k].original_type is list:
                     out.append(self._child_as_list(pk, k))
