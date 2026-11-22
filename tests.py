@@ -8,6 +8,7 @@ import random
 import typing
 import unittest
 import uuid
+from collections import OrderedDict
 
 import flatdict
 
@@ -295,6 +296,20 @@ class FlatDictTests(unittest.TestCase):
 
 
 class FlatterDictTests(FlatDictTests):
+    def test_dictionary_subclasses_roundtrip(self):
+        class CustomDict(dict):
+            pass
+
+        for mapping_type in (OrderedDict, CustomDict):
+            for nested in (
+                {'section': mapping_type(value=1)},
+                {'items': [mapping_type(value=1)]},
+                {'items': [mapping_type(section=mapping_type(value=1))]},
+            ):
+                with self.subTest(mapping_type=mapping_type, nested=nested):
+                    flattened = flatdict.FlatterDict(nested)
+                    self.assertEqual(flattened.as_dict(), nested)
+
     TEST_CLASS = flatdict.FlatterDict
 
     FLAT_EXPECTATION: typing.ClassVar[dict] = {

@@ -462,7 +462,7 @@ class FlatterDict(FlatDict):
                         out[pk] = self._child_as_list(pk)
                     elif self._values[pk].original_type is set:
                         out[pk] = set(self._child_as_list(pk))
-                    elif self._values[pk].original_type is dict:
+                    elif issubclass(self._values[pk].original_type, dict):
                         out[pk] = self._values[pk].as_dict()
             else:
                 if isinstance(self._values[key], FlatterDict):
@@ -498,7 +498,7 @@ class FlatterDict(FlatDict):
                     out.append(self._child_as_list(pk, k))
                 elif subset[k].original_type is set:
                     out.append(set(self._child_as_list(pk, k)))
-                elif subset[k].original_type is dict:
+                elif issubclass(subset[k].original_type, dict):
                     out.append(subset[k].as_dict())
             return out
 
