@@ -168,7 +168,9 @@ class FlatDict(collections.abc.MutableMapping[str, typing.Any]):
         )
 
     def as_dict(self) -> dict[str, typing.Any]:
-        """Return the :class:`~flatdict.FlatDict` as a :class:`dict`
+        """Return the nested structure as a :class:`dict`.
+
+        Use ``dict(self)`` instead to export the flattened, delimited keys.
 
         :rtype: dict
 
@@ -445,6 +447,9 @@ class FlatterDict(FlatDict):
     def as_dict(self) -> dict[str, typing.Any]:
         """Return the :class:`~flatdict.FlatterDict` as a nested
         :class:`dict`.
+
+        Original lists, tuples, and sets are reconstructed. Use ``dict(self)``
+        instead to export the flattened keys, including enumerated indices.
 
         :rtype: dict
 

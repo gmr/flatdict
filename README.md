@@ -47,6 +47,20 @@ value = flatdict.FlatterDict({'list': ['a', 'b', 'c']})
 value == {'list:0': 'a', 'list:1': 'b', 'list:2': 'c'}
 ```
 
+## Exporting to a dictionary
+
+Use `dict(value)` to export the flattened keys to a standard dictionary.
+Use `value.as_dict()` to restore the nested structure:
+
+```python
+value = flatdict.FlatDict({'a': {'b': 1}})
+dict(value)  # {'a:b': 1}
+value.as_dict()  # {'a': {'b': 1}}
+```
+
+The same distinction applies to `FlatterDict`: `dict(value)` keeps keys such
+as `'list:0'`, while `as_dict()` reconstructs the original list or tuple.
+
 ## API
 
 Documentation is available at https://flatdict.readthedocs.io
